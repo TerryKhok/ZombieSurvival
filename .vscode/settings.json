@@ -51,6 +51,6 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "AT11B305_09_郭宇浩_3kou.sln",
+    "dotnet.defaultSolution": "ZombieSurvival.sln",
     "cmake.configureOnOpen": true
 }
