@@ -7,6 +7,9 @@ using UnityEngine.UI;
 public class ThirdPersonShooterController : MonoBehaviour
 {
     //ーーーーーーーーーー変数宣言ーーーーーーーーーー
+    [Header("Currently selected as controlled chartacter")]
+    [SerializeField]private bool isControlled = false;
+
     [Header("Aim")]
     [SerializeField] private GameObject _playerGameobject; //プレイヤーのgameobject
     [SerializeField] private CinemachineVirtualCamera _aimVirtualCamera; //エイムカメラコンポーネント
@@ -85,8 +88,10 @@ public class ThirdPersonShooterController : MonoBehaviour
     {
         if (!IsDead)
         {
+            if(isControlled){
             Aim();
             ShootInput();
+            }
         }
         _bulletAmountText.text = _bulletsLeft + "/" + _magazineSize;
     }
@@ -154,7 +159,7 @@ public class ThirdPersonShooterController : MonoBehaviour
             if (_bulletsLeft > 0)
             {
                 _bulletsShot = _bulletsPerTap;
-                Shoot();
+                Shoot(_mouseWorldPosition);
             }
             else
             {
@@ -173,8 +178,35 @@ public class ThirdPersonShooterController : MonoBehaviour
     }
 
 
-    //弾撃つ関数
-    private void Shoot()
+    private void ResetShot()
+    {
+        _readyToShoot = true;
+    }
+
+
+    private void Reload()
+    {
+        _isReloading = true;
+        _crosshairController.DoReload();
+        Invoke("ReloadFinished", _reloadSpeed);
+    }
+
+    private void PlayShotgunCock()
+    {
+        _audioManager.Play(_gunCockSFX);
+    }
+
+    private void ReloadFinished()
+    {
+        _bulletsLeft = _magazineSize;
+        _isReloading = false;
+    }
+    //ーーーーーーーーーーendPrivate関数ーーーーーーーーーー
+
+
+    //ーーーーーーーーーーPublic関数ーーーーーーーーーー
+     //弾撃つ関数
+    public void Shoot(Vector3 targetPosition)
     {
         _readyToShoot = false;
 
@@ -184,7 +216,7 @@ public class ThirdPersonShooterController : MonoBehaviour
         float zSpread = Random.Range(-1f, 1f);
 
         //弾の方向を計算
-        Vector3 aimDir = (_mouseWorldPosition - _spawnBulletPosition.position).normalized + (new Vector3(xSpread, ySpread, zSpread).normalized * _spread);
+        Vector3 aimDir = (targetPosition - _spawnBulletPosition.position).normalized + (new Vector3(xSpread, ySpread, zSpread).normalized * _spread);
 
         //弾を生成
         Instantiate(_muzzleFlash, _spawnBulletPosition.position, Quaternion.LookRotation(aimDir, Vector3.up));
@@ -217,30 +249,5 @@ public class ThirdPersonShooterController : MonoBehaviour
             Invoke("Shoot", _timeBetweenShotsPerTap);
         }
     }
-
-
-    private void ResetShot()
-    {
-        _readyToShoot = true;
-    }
-
-
-    private void Reload()
-    {
-        _isReloading = true;
-        _crosshairController.DoReload();
-        Invoke("ReloadFinished", _reloadSpeed);
-    }
-
-    private void PlayShotgunCock()
-    {
-        _audioManager.Play(_gunCockSFX);
-    }
-
-    private void ReloadFinished()
-    {
-        _bulletsLeft = _magazineSize;
-        _isReloading = false;
-    }
-    //ーーーーーーーーーーendPrivate関数ーーーーーーーーーー
+    //ーーーーーーーーーーEndPublic関数ーーーーーーーーーー
 }
