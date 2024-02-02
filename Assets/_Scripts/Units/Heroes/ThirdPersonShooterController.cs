@@ -8,7 +8,7 @@ public class ThirdPersonShooterController : MonoBehaviour
 {
     //ーーーーーーーーーー変数宣言ーーーーーーーーーー
     [Header("Currently selected as controlled chartacter")]
-    [SerializeField]private bool isControlled = false;
+    [SerializeField] private bool _isControlled = false;
 
     [Header("Aim")]
     [SerializeField] private GameObject _playerGameobject; //プレイヤーのgameobject
@@ -49,7 +49,7 @@ public class ThirdPersonShooterController : MonoBehaviour
     private Animator _animator;
     private AudioManager _audioManager;
 
-    private Vector3 _mouseWorldPosition = Vector3.zero; //カーソル位置情報
+    private Vector3 _targetPosition = Vector3.zero; //カーソル位置情報
 
     private float _shootRate;
     private int _bulletsLeft;
@@ -70,12 +70,16 @@ public class ThirdPersonShooterController : MonoBehaviour
         _audioManager = FindObjectOfType<AudioManager>();
     }
 
+
     private void Start()
     {
         //crosshairのステータスを設定する
-        _crosshairController.SetReloadSpeed(_reloadSpeed);
-        _crosshairController.SetShrinkSpeed(_settleSpeed);
-        _crosshairController.SetMaxScale(_maxCrosshairSize);
+        if (_crosshairController != null)
+        {
+            _crosshairController.SetReloadSpeed(_reloadSpeed);
+            _crosshairController.SetShrinkSpeed(_settleSpeed);
+            _crosshairController.SetMaxScale(_maxCrosshairSize);
+        }
 
         //射的速度を計算
         _shootRate = 1.0f / _shotsPerSecond;
@@ -84,16 +88,19 @@ public class ThirdPersonShooterController : MonoBehaviour
         _readyToShoot = true;
     }
 
+
     private void Update()
     {
-        if (!IsDead)
+        if (_isControlled)
         {
-            if(isControlled){
-            Aim();
-            ShootInput();
+            if (!IsDead)
+            {
+                Aim();
+                ShootInput();
             }
+
+            _bulletAmountText.text = _bulletsLeft + "/" + _magazineSize;
         }
-        _bulletAmountText.text = _bulletsLeft + "/" + _magazineSize;
     }
 
 
@@ -107,7 +114,7 @@ public class ThirdPersonShooterController : MonoBehaviour
         Ray ray = Camera.main.ScreenPointToRay(screenCenterPoint);
         if (Physics.Raycast(ray, out RaycastHit raycastHit, 999f, _aimColliderLayerMask))
         {
-            _mouseWorldPosition = raycastHit.point;
+            _targetPosition = raycastHit.point;
         }
 
         //エイム押したら、カメラとカメラ感度を切り替える
@@ -119,7 +126,7 @@ public class ThirdPersonShooterController : MonoBehaviour
             _animator.SetLayerWeight(1, Mathf.Lerp(_animator.GetLayerWeight(1), 1f, Time.deltaTime * 10f));
 
             //カーソル位置情報からキャラの回転方向を決める
-            Vector3 worldAimTarget = _mouseWorldPosition;
+            Vector3 worldAimTarget = _targetPosition;
             worldAimTarget.y = _playerGameobject.transform.position.y;
             Vector3 aimDirection = (worldAimTarget - _playerGameobject.transform.position).normalized;
 
@@ -135,78 +142,8 @@ public class ThirdPersonShooterController : MonoBehaviour
     }
 
 
-    //弾撃つ操作管理関数
-    private void ShootInput()
-    {
-        if (_allowButtonHold)
-        {
-            _isShooting = Input.GetKey(KeyCode.Mouse0);
-        }
-        else
-        {
-            _isShooting = Input.GetKeyDown(KeyCode.Mouse0);
-        }
-
-        if (Input.GetKeyDown(KeyCode.R) && _bulletsLeft < _magazineSize && !_isReloading)
-        {
-            _crosshairController.SetReloadSpeed(_reloadSpeed);
-
-            Reload();
-        }
-
-        if (_readyToShoot && _isShooting && !_isReloading)
-        {
-            if (_bulletsLeft > 0)
-            {
-                _bulletsShot = _bulletsPerTap;
-                Shoot(_mouseWorldPosition,_spawnBulletPosition.position);
-            }
-            else
-            {
-                _crosshairController.SetReloadSpeed(_reloadSpeed);
-                Reload();
-            }
-        }
-        else
-        {
-            if (_gunShotSFX == "MinigunShot")
-            {
-                _isPlayingMinigunLoop = false;
-                _audioManager.Stop("MinigunShot");
-            }
-        }
-    }
-
-
-    private void ResetShot()
-    {
-        _readyToShoot = true;
-    }
-
-
-    private void Reload()
-    {
-        _isReloading = true;
-        _crosshairController.DoReload();
-        Invoke("ReloadFinished", _reloadSpeed);
-    }
-
-    private void PlayShotgunCock()
-    {
-        _audioManager.Play(_gunCockSFX);
-    }
-
-    private void ReloadFinished()
-    {
-        _bulletsLeft = _magazineSize;
-        _isReloading = false;
-    }
-    //ーーーーーーーーーーendPrivate関数ーーーーーーーーーー
-
-
-    //ーーーーーーーーーーPublic関数ーーーーーーーーーー
-     //弾撃つ関数
-    public void Shoot(Vector3 targetPosition,Vector3 spawnBulletPos)
+    //弾撃つ関数
+    private void Shoot()
     {
         _readyToShoot = false;
 
@@ -216,16 +153,19 @@ public class ThirdPersonShooterController : MonoBehaviour
         float zSpread = Random.Range(-1f, 1f);
 
         //弾の方向を計算
-        Vector3 aimDir = (targetPosition - spawnBulletPos).normalized + (new Vector3(xSpread, ySpread, zSpread).normalized * _spread);
+        Vector3 aimDir = (_targetPosition - _spawnBulletPosition.position).normalized + (new Vector3(xSpread, ySpread, zSpread).normalized * _spread);
 
         //弾を生成
         Instantiate(_muzzleFlash, _spawnBulletPosition.position, Quaternion.LookRotation(aimDir, Vector3.up));
         Transform bullet = Instantiate(_prefabBulletProjectile, _spawnBulletPosition.position, Quaternion.LookRotation(aimDir, Vector3.up));
         BulletProjectile bulletProjectile = bullet.GetComponent<BulletProjectile>();
         bulletProjectile.BulletDamage = _damage;
-        _crosshairController.ExpandCrosshair(_gunRecoil);
         _bulletsLeft--;
         _bulletsShot--;
+        if (_isControlled)
+        {
+            _crosshairController.ExpandCrosshair(_gunRecoil);
+        }
 
         if (_gunShotSFX == "MinigunShot")
         {
@@ -248,6 +188,99 @@ public class ThirdPersonShooterController : MonoBehaviour
         {
             Invoke("Shoot", _timeBetweenShotsPerTap);
         }
+    }
+
+
+    private void ResetShot()
+    {
+        _readyToShoot = true;
+    }
+
+
+    private void Reload()
+    {
+        _isReloading = true;
+        _crosshairController.DoReload();
+        Invoke("ReloadFinished", _reloadSpeed);
+    }
+
+
+    private void PlayShotgunCock()
+    {
+        _audioManager.Play(_gunCockSFX);
+    }
+
+
+    private void ReloadFinished()
+    {
+        _bulletsLeft = _magazineSize;
+        _isReloading = false;
+    }
+    //ーーーーーーーーーーendPrivate関数ーーーーーーーーーー
+
+
+    //ーーーーーーーーーーPublic関数ーーーーーーーーーー
+    //弾撃つ操作管理関数
+    public void ShootInput()
+    {
+        if (_isControlled){
+            if (_allowButtonHold)
+            {
+                _isShooting = Input.GetKey(KeyCode.Mouse0);
+            }
+            else
+            {
+                _isShooting = Input.GetKeyDown(KeyCode.Mouse0);
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.R) && _bulletsLeft < _magazineSize && !_isReloading)
+        {
+            _crosshairController.SetReloadSpeed(_reloadSpeed);
+
+            Reload();
+        }
+
+        if (_readyToShoot && _isShooting && !_isReloading)
+        {
+        Debug.Log(_readyToShoot + "," + _isShooting + "," + _isReloading);
+            if (_bulletsLeft > 0)
+            {
+                _bulletsShot = _bulletsPerTap;
+                Shoot();
+            }
+            else
+            {
+                _crosshairController.SetReloadSpeed(_reloadSpeed);
+                Reload();
+            }
+        }
+        else
+        {
+            if (_gunShotSFX == "MinigunShot")
+            {
+                _isPlayingMinigunLoop = false;
+                _audioManager.Stop("MinigunShot");
+            }
+        }
+    }
+
+
+    public void SetBulletSpawnPos(Transform newSpawnBulletPos)
+    {
+        _spawnBulletPosition = newSpawnBulletPos;
+    }
+
+
+    public void SetIsShooting(bool newIsShooting)
+    {
+        _isShooting = newIsShooting;
+    }
+
+
+    public void SetTargetPos(Vector3 newTargetPos)
+    {
+        _targetPosition = newTargetPos;
     }
     //ーーーーーーーーーーEndPublic関数ーーーーーーーーーー
 }

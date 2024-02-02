@@ -14,7 +14,7 @@ public class CompanionAttack : MonoBehaviour
 
     private Coroutine AttackCoroutine;
 
-    private List<BulletTarget> _attackableObjects = new List<BulletTarget>();
+    [SerializeField] private List<BulletTarget> _attackableObjects = new List<BulletTarget>();
 
     private void Awake()
     {
@@ -31,8 +31,7 @@ public class CompanionAttack : MonoBehaviour
                 StopCoroutine(AttackCoroutine);
             }
             AttackCoroutine = StartCoroutine(Attack());
-                _shooterController.Shoot(other.transform.position,_spawnBulletPosition.position);
-                Debug.Log("Companion tried to attack");
+            Debug.Log("Companion tried to attack");
         }
     }
 
@@ -43,41 +42,26 @@ public class CompanionAttack : MonoBehaviour
             _attackableObjects.Remove(attackable);
             if (_attackableObjects.Count == 0)
             {
-                //StopCoroutine(AttackCoroutine);
+                StopCoroutine(AttackCoroutine);
+            _shooterController.SetIsShooting(false);
+
             }
         }
     }
 
     private IEnumerator Attack()
     {
-        WaitForSeconds wait = new WaitForSeconds(_attackDelay);
         while (_attackableObjects.Count > 0)
         {
-            yield return wait;
-
             BulletTarget closestAttackable = FindClosestAttackable();
 
-            Transform bullet = Instantiate(_prefab, transform.position + new Vector3(0, 1f, 0), Quaternion.LookRotation(transform.forward, Vector3.up));
+            _shooterController.SetBulletSpawnPos(_spawnBulletPosition);
+            _shooterController.SetIsShooting(true);
+            _shooterController.SetTargetPos(closestAttackable.transform.position + new Vector3(0f, _spawnBulletPosition.position.y, 0f));
+            _shooterController.ShootInput();
 
-            StartCoroutine(MoveAttack(bullet, closestAttackable));
-        }
-    }
-
-    private IEnumerator MoveAttack(Transform bullet, BulletTarget attackable)
-    {
-        Vector3 startPosition = bullet.transform.position;
-
-        float distance = Vector3.Distance(bullet.transform.position, attackable.transform.position);
-        float startingDistance = distance;
-
-        while (distance > 0)
-        {
-            bullet.transform.position = Vector3.Lerp(startPosition, attackable.transform.position, 1);
-            distance -= Time.deltaTime * _attackMoveSpeed;
             yield return null;
         }
-        yield return new WaitForSeconds(1f);
-
     }
 
     private BulletTarget FindClosestAttackable()

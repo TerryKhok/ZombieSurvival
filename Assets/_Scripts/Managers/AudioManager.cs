@@ -11,19 +11,6 @@ public class AudioManager : MonoBehaviour
 
     private void Awake()
     {
-    //==========Scene移転でも消えな�?==========
-        //DontDestroyOnLoad(gameObject);
-
-        // if (instance == null)
-        // {
-        //     instance = this;
-        // }
-        // else
-        // {
-        //     Destroy(gameObject);
-        //     return;
-        // }
-    //==========配�?�に入れたSFXにAudioSourceを作っれあげる==========
         foreach (Sound s in sounds)
         {
             s.src = gameObject.AddComponent<AudioSource>();
@@ -45,14 +32,9 @@ public class AudioManager : MonoBehaviour
             s.src.spatialBlend = s.spatialBlend;
             s.src.rolloffMode = AudioRolloffMode.Linear;
         }
-    //=============================================================
-    }
-    
-    private void Start()
-    {
     }
 
-    public void Play(string name)   //SFX流れ�?
+    public void Play(string name)
     {
         Sound s = Array.Find(sounds, sound => sound.name == name);
         if (s == null)
@@ -63,7 +45,7 @@ public class AudioManager : MonoBehaviour
         s.src.Play();
     }
 
-    public void Stop(string name)   //SFX止ま�?
+    public void Stop(string name)
     {
         Sound s = Array.Find(sounds, sound => sound.name == name);
         if (s == null)

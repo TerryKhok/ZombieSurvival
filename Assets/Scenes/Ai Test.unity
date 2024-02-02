@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028326, g: 0.22571333, b: 0.30692202, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -141,7 +141,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &23608915
 Transform:
   m_ObjectHideFlags: 0
@@ -175,6 +175,7 @@ MonoBehaviour:
   _companion: {fileID: 0}
   _shooterController: {fileID: 0}
   _spawnBulletPosition: {fileID: 138242285}
+  _attackableObjects: []
 --- !u!135 &23608917
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -208,23 +209,23 @@ MonoBehaviour:
   _aimColliderLayerMask:
     serializedVersion: 2
     m_Bits: 0
-  _prefabBulletProjectile: {fileID: 0}
+  _prefabBulletProjectile: {fileID: 5117177220708110463, guid: c7f84967e51bcad48a8b68de90298549, type: 3}
   _spawnBulletPosition: {fileID: 0}
   _crosshairController: {fileID: 0}
-  _muzzleFlash: {fileID: 0}
+  _muzzleFlash: {fileID: 1743301284569550, guid: ad2ab49d0a2a17148bd51c93d977bdbc, type: 3}
   _bulletAmountText: {fileID: 0}
   _damage: 20
   _magazineSize: 30
-  _shotsPerSecond: 5
+  _shotsPerSecond: 10
   _allowButtonHold: 1
   _bulletsPerTap: 1
-  _timeBetweenShotsPerTap: 0.1
+  _timeBetweenShotsPerTap: 0
   _reloadSpeed: 1
   _settleSpeed: 2
   _maxCrosshairSize: 2
   _gunRecoil: 0.3
-  _spread: 1
-  _gunShotSFX: 
+  _spread: 0.02
+  _gunShotSFX: MachineGunShot
   _gunCockSFX: 
   IsDead: 0
 --- !u!1 &138242284
@@ -1033,6 +1034,205 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bd4f67fe1134d9b49a5576a820b69421, type: 3}
+--- !u!1 &1023782736
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1023782738}
+  - component: {fileID: 1023782737}
+  m_Layer: 0
+  m_Name: AudioManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1023782737
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1023782736}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b4157548f64a67429bd9174e9508c32, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SEMixerGroup: {fileID: -1195198735783366046, guid: ae7eb19a1fd18c649a8d4e61b34292a8, type: 2}
+  musicMixerGroup: {fileID: 467418973013745016, guid: ae7eb19a1fd18c649a8d4e61b34292a8, type: 2}
+  sounds:
+  - audioType: 1
+    name: BGM
+    clip: {fileID: 8300000, guid: cb57f21577368ce4bbc3cef678c27dab, type: 3}
+    volume: 0.2
+    pitch: 1
+    loop: 1
+    spatialBlend: 0
+    src: {fileID: 0}
+  - audioType: 0
+    name: Button
+    clip: {fileID: 8300000, guid: ecd475d576d3b524e828234b62ae7273, type: 3}
+    volume: 0.5
+    pitch: 1
+    loop: 0
+    spatialBlend: 0
+    src: {fileID: 0}
+  - audioType: 0
+    name: PickUp
+    clip: {fileID: 8300000, guid: 702407d6641ceab499c445b4e0ddeb1e, type: 3}
+    volume: 0.6
+    pitch: 1
+    loop: 0
+    spatialBlend: 0
+    src: {fileID: 0}
+  - audioType: 0
+    name: ZombieHurt
+    clip: {fileID: 8300000, guid: 9e5b46940490f7748b14e932dbeedcac, type: 3}
+    volume: 0.4
+    pitch: 1
+    loop: 0
+    spatialBlend: 0
+    src: {fileID: 0}
+  - audioType: 0
+    name: ZombieBite
+    clip: {fileID: 8300000, guid: a8c6e78d81c5ce042827523a67f01dd3, type: 3}
+    volume: 0.4
+    pitch: 1
+    loop: 0
+    spatialBlend: 0
+    src: {fileID: 0}
+  - audioType: 0
+    name: ZombieAttack01
+    clip: {fileID: 8300000, guid: 663c5c811bc16a849a79a61e00a789cc, type: 3}
+    volume: 0.4
+    pitch: 1
+    loop: 0
+    spatialBlend: 0
+    src: {fileID: 0}
+  - audioType: 0
+    name: ZombieAttack02
+    clip: {fileID: 8300000, guid: e4ff182fc0ddfce4bb51b70809ce2a7f, type: 3}
+    volume: 0.4
+    pitch: 1
+    loop: 0
+    spatialBlend: 0
+    src: {fileID: 0}
+  - audioType: 0
+    name: ZombieAttack03
+    clip: {fileID: 8300000, guid: 1ac7c8c3340cddd4c99761657dc58817, type: 3}
+    volume: 0.4
+    pitch: 1
+    loop: 0
+    spatialBlend: 0
+    src: {fileID: 0}
+  - audioType: 0
+    name: ZombieIdle01
+    clip: {fileID: 8300000, guid: ec12710ab6ab33d44896c7d6676a143c, type: 3}
+    volume: 0.5
+    pitch: 1
+    loop: 0
+    spatialBlend: 1
+    src: {fileID: 0}
+  - audioType: 0
+    name: ZombieIdle02
+    clip: {fileID: 8300000, guid: b0c441442a27e2f4780d31ff5739c79e, type: 3}
+    volume: 0.5
+    pitch: 1
+    loop: 0
+    spatialBlend: 1
+    src: {fileID: 0}
+  - audioType: 0
+    name: ZombieIdle03
+    clip: {fileID: 8300000, guid: 24da83654463742479f1d6e4724cf35e, type: 3}
+    volume: 0.5
+    pitch: 1
+    loop: 0
+    spatialBlend: 1
+    src: {fileID: 0}
+  - audioType: 0
+    name: PistolShot
+    clip: {fileID: 8300000, guid: 1b766da7cc2d648aa84e36cb5fe8abcb, type: 3}
+    volume: 0.3
+    pitch: 1
+    loop: 0
+    spatialBlend: 0
+    src: {fileID: 0}
+  - audioType: 0
+    name: MachineGunShot
+    clip: {fileID: 8300000, guid: 65201ddabb4144f6a8fb9480120b7656, type: 3}
+    volume: 0.3
+    pitch: 1
+    loop: 0
+    spatialBlend: 0
+    src: {fileID: 0}
+  - audioType: 0
+    name: BurstGunShot
+    clip: {fileID: 8300000, guid: 611f65b2aba4a4af7b4ab3d6ddb5b546, type: 3}
+    volume: 0.4
+    pitch: 1
+    loop: 0
+    spatialBlend: 0
+    src: {fileID: 0}
+  - audioType: 0
+    name: ShotgunShot
+    clip: {fileID: 8300000, guid: 53a1a8c18087346d18a02d8a4e0c59ca, type: 3}
+    volume: 0.3
+    pitch: 1
+    loop: 0
+    spatialBlend: 0
+    src: {fileID: 0}
+  - audioType: 0
+    name: ShotgunCock
+    clip: {fileID: 8300000, guid: cef0fa03af5b747f0abe82cde0b2bccc, type: 3}
+    volume: 0.4
+    pitch: 1
+    loop: 0
+    spatialBlend: 0
+    src: {fileID: 0}
+  - audioType: 0
+    name: SniperShot
+    clip: {fileID: 8300000, guid: 8bcea2a3cc290a54887408e0024c24d9, type: 3}
+    volume: 0.4
+    pitch: 1
+    loop: 0
+    spatialBlend: 0
+    src: {fileID: 0}
+  - audioType: 0
+    name: MinigunShot
+    clip: {fileID: 8300000, guid: 2316776e9c3edd34687861890394a664, type: 3}
+    volume: 0.4
+    pitch: 1
+    loop: 1
+    spatialBlend: 0
+    src: {fileID: 0}
+  - audioType: 0
+    name: PlayerHurt
+    clip: {fileID: 8300000, guid: 3b76cf7a6c64f4e499f17c3bd5457132, type: 3}
+    volume: 0.4
+    pitch: 1
+    loop: 0
+    spatialBlend: 0
+    src: {fileID: 0}
+--- !u!4 &1023782738
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1023782736}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 9
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1029365922
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1125,9 +1325,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e680fd4fa17c845889e2f953c86276d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _rotationSpeed: 2
   _followDestination: {fileID: 1681583523}
-  _walkRadius: 7.5
+  _walkRadius: 10
   _runRadius: 20
   _player: {fileID: 223173524}
   _distanceBetweenPlayer: 0
@@ -1312,6 +1511,14 @@ PrefabInstance:
     - target: {fileID: 4416926081852918481, guid: 64dce48905ffd9b4293e595fa6941544, type: 3}
       propertyPath: m_Name
       value: PlayerArmature
+      objectReference: {fileID: 0}
+    - target: {fileID: 4416926081852918490, guid: 64dce48905ffd9b4293e595fa6941544, type: 3}
+      propertyPath: MoveSpeed
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 4416926081852918490, guid: 64dce48905ffd9b4293e595fa6941544, type: 3}
+      propertyPath: SprintSpeed
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 4416926081852918490, guid: 64dce48905ffd9b4293e595fa6941544, type: 3}
       propertyPath: GroundLayers.m_Bits

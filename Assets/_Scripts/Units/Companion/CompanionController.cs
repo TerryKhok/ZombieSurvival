@@ -26,14 +26,11 @@ public class CompanionController : MonoBehaviour
     // }
 
 
-    //ーーーーーーーーーー変数宣言ーーーーーーーーーー
-    [Header("Idle Configs")]
-    [SerializeField][Range(0f, 10f)] private float _rotationSpeed = 2f;
-
+    //繝ｼ繝ｼ繝ｼ繝ｼ繝ｼ繝ｼ繝ｼ繝ｼ繝ｼ繝ｼ螟画焚螳｣險繝ｼ繝ｼ繝ｼ繝ｼ繝ｼ繝ｼ繝ｼ繝ｼ繝ｼ繝ｼ
     [Header("Follow Configs")]
     [SerializeField] private Transform _followDestination;
-    [SerializeField] private float _walkRadius = 0f;
-    [SerializeField] private float _runRadius = 2f;
+    [SerializeField] private float _walkRadius;
+    [SerializeField] private float _runRadius;
     
 
     [Header("Cache")]
@@ -43,7 +40,7 @@ public class CompanionController : MonoBehaviour
     private CompanionAttack _companionAttack;
 
     [SerializeField]private float _distanceBetweenPlayer;
-    //ーーーーーーーーーーend変数宣言ーーーーーーーーーー
+    //繝ｼ繝ｼ繝ｼ繝ｼ繝ｼ繝ｼ繝ｼ繝ｼ繝ｼ繝ｼend螟画焚螳｣險繝ｼ繝ｼ繝ｼ繝ｼ繝ｼ繝ｼ繝ｼ繝ｼ繝ｼ繝ｼ
 
 
     private void Awake()
@@ -71,7 +68,7 @@ public class CompanionController : MonoBehaviour
     }
 
 
-    //ーーーーーーーーーーPrivate関数ーーーーーーーーーー
+    //繝ｼ繝ｼ繝ｼ繝ｼ繝ｼ繝ｼ繝ｼ繝ｼ繝ｼ繝ｼPrivate髢｢謨ｰ繝ｼ繝ｼ繝ｼ繝ｼ繝ｼ繝ｼ繝ｼ繝ｼ繝ｼ繝ｼ
     private void RunToPlayer()
     {
         FollowPlayer(_followDestination.position, 10f);
@@ -103,6 +100,6 @@ public class CompanionController : MonoBehaviour
         _agent.SetDestination(followDestination);
         _agent.speed = followSpeed;
     }
-    //ーーーーーーーーーーendPrivate関数ーーーーーーーーーー
+    //繝ｼ繝ｼ繝ｼ繝ｼ繝ｼ繝ｼ繝ｼ繝ｼ繝ｼ繝ｼendPrivate髢｢謨ｰ繝ｼ繝ｼ繝ｼ繝ｼ繝ｼ繝ｼ繝ｼ繝ｼ繝ｼ繝ｼ
 
 }
