@@ -159,7 +159,7 @@ public class ThirdPersonShooterController : MonoBehaviour
             if (_bulletsLeft > 0)
             {
                 _bulletsShot = _bulletsPerTap;
-                Shoot(_mouseWorldPosition);
+                Shoot(_mouseWorldPosition,_spawnBulletPosition.position);
             }
             else
             {
@@ -206,7 +206,7 @@ public class ThirdPersonShooterController : MonoBehaviour
 
     //ーーーーーーーーーーPublic関数ーーーーーーーーーー
      //弾撃つ関数
-    public void Shoot(Vector3 targetPosition)
+    public void Shoot(Vector3 targetPosition,Vector3 spawnBulletPos)
     {
         _readyToShoot = false;
 
@@ -216,7 +216,7 @@ public class ThirdPersonShooterController : MonoBehaviour
         float zSpread = Random.Range(-1f, 1f);
 
         //弾の方向を計算
-        Vector3 aimDir = (targetPosition - _spawnBulletPosition.position).normalized + (new Vector3(xSpread, ySpread, zSpread).normalized * _spread);
+        Vector3 aimDir = (targetPosition - spawnBulletPos).normalized + (new Vector3(xSpread, ySpread, zSpread).normalized * _spread);
 
         //弾を生成
         Instantiate(_muzzleFlash, _spawnBulletPosition.position, Quaternion.LookRotation(aimDir, Vector3.up));

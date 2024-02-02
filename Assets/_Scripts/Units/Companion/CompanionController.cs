@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Data.Common;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Animations;
@@ -25,107 +26,83 @@ public class CompanionController : MonoBehaviour
     // }
 
 
+    //ーーーーーーーーーー変数宣言ーーーーーーーーーー
+    [Header("Idle Configs")]
+    [SerializeField][Range(0f, 10f)] private float _rotationSpeed = 2f;
+
+    [Header("Follow Configs")]
+    [SerializeField] private Transform _followDestination;
+    [SerializeField] private float _walkRadius = 0f;
+    [SerializeField] private float _runRadius = 2f;
+    
+
+    [Header("Cache")]
+    [SerializeField] private Player _player;
+
+    private NavMeshAgent _agent;
+    private CompanionAttack _companionAttack;
+
+    [SerializeField]private float _distanceBetweenPlayer;
+    //ーーーーーーーーーーend変数宣言ーーーーーーーーーー
 
 
-    // private NavMeshAgent _agent;
-    // [SerializeField] private Player _player;
-    // [SerializeField] Companion _companion;
+    private void Awake()
+    {
+        _agent = GetComponent<NavMeshAgent>();
+        _companionAttack = GetComponentInChildren<CompanionAttack>();
+    }
 
-    // [Header("Idle Configs")]
-    // [SerializeField][Range(0f, 10f)] private float _rotationSpeed = 2f;
 
-    // [Header("Follow Configs")]
-    // [SerializeField] private float _followRadius = 2f;
+    private void Update()
+    {
+        _distanceBetweenPlayer = Vector3.Distance(_player.transform.position, transform.position);
+        if (_distanceBetweenPlayer > _runRadius)
+        {
+            RunToPlayer();
+        }
+        else if (_runRadius > _distanceBetweenPlayer && _distanceBetweenPlayer > _walkRadius)
+        {
+            WalkAndGunToPlayer();
+        }
+        else
+        {
+            IdleAndFaceOutwards();
+        }
+    }
 
-    // private Coroutine MovementCoroutine;
-    // private Coroutine StateChangeCoroutine;
 
-    // private void Awake()
-    // {
-    //     _agent = GetComponent<NavMeshAgent>();
-    //     _player.OnStateChange += HandleStateChange;
-    // }
+    //ーーーーーーーーーーPrivate関数ーーーーーーーーーー
+    private void RunToPlayer()
+    {
+        FollowPlayer(_followDestination.position, 10f);
+    }
 
-    // private void HandleStateChange(PlayerState oldState, PlayerState newState)
-    // {
-    //     if (StateChangeCoroutine != null)
-    //     {
-    //         StopCoroutine(StateChangeCoroutine);
-    //     }
 
-    //     switch (newState)
-    //     {
-    //         case PlayerState.Idle:
-    //             StateChangeCoroutine = StartCoroutine(HandleIdlePlayer());
-    //             break;
-    //         case PlayerState.Moving:
-    //             HandleMovingPlayer();
-    //             break;
-    //     }
-    // }
+    private void WalkAndGunToPlayer()
+    {
+        FollowPlayer(_followDestination.position, 3f);
+    }
 
-    // private IEnumerator HandleIdlePlayer()
-    // {
-    //     switch (_companion.State)
-    //     {
-    //         case CompanionState.Follow:
-    //             yield return null;
-    //             yield return null;
-    //             yield return new WaitUntil(() => _companion.State == CompanionState.Idle);
-    //             goto case CompanionState.Idle;
-    //         case CompanionState.Idle:
-    //             if (MovementCoroutine != null)
-    //             {
-    //                 StopCoroutine(MovementCoroutine);
-    //             }
-    //             _agent.enabled = false;
-    //             MovementCoroutine = StartCoroutine(RotateAroundPlayer());
-    //             break;
-    //     }
-    // }
 
-    // private void HandleMovingPlayer()
-    // {
-    //     _companion.ChangeState(CompanionState.Follow);
-    //     if (MovementCoroutine != null)
-    //     {
-    //         StopCoroutine(MovementCoroutine);
-    //     }
+    private void IdleAndFaceOutwards()
+    {
+        if (_agent.remainingDistance <= _agent.stoppingDistance)
+        {
+            if (!_agent.hasPath || _agent.velocity.sqrMagnitude == 0f)
+            {
+                Quaternion outwardDir = Quaternion.LookRotation(_player.transform.position - transform.position) * Quaternion.Euler(0, 180, 0);
+                transform.rotation = Quaternion.Slerp(transform.rotation, outwardDir, 0.01f);
 
-    //     if (!_agent.enabled)
-    //     {
-    //         _agent.enabled = true;
-    //         _agent.Warp(transform.position);
-    //     }
-    //     MovementCoroutine = StartCoroutine(FollowPlayer());
-    // }
+            }
+        }
+    }
 
-    // private IEnumerator RotateAroundPlayer()
-    // {
-    //     WaitForFixedUpdate wait = new WaitForFixedUpdate();
-    //     while (true)
-    //     {
-    //         Debug.Log(" TEST");
-    //         transform.RotateAround(_player.transform.position, Vector3.up, _rotationSpeed);
-    //         yield return wait;
-    //     }
-    // }
 
-    // private IEnumerator FollowPlayer()
-    // {
-    //     yield return null;
+    private void FollowPlayer(Vector3 followDestination, float followSpeed)
+    {
+        _agent.SetDestination(followDestination);
+        _agent.speed = followSpeed;
+    }
+    //ーーーーーーーーーーendPrivate関数ーーーーーーーーーー
 
-    //     NavMeshAgent playerAgent = _player.GetComponentInChildren<NavMeshAgent>();
-    //     Vector3 playerDestination = playerAgent.destination;
-    //     Vector3 positionOffset = _followRadius * new Vector3(Mathf.Cos(2 * Mathf.PI * Random.value),
-    //                                                          0,
-    //                                                          Mathf.Sin(2 * Mathf.PI * Random.value)).normalized;
-
-    //     _agent.SetDestination(playerDestination + positionOffset);
-
-    //     yield return null;
-    //     yield return new WaitUntil(() => _agent.remainingDistance <= _agent.stoppingDistance);
-
-    //     _companion.ChangeState(CompanionState.Idle);
-    // }
 }

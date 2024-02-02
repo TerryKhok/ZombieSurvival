@@ -9,6 +9,7 @@ public class CompanionAttack : MonoBehaviour
     [SerializeField] private float _attackMoveSpeed = 3;
     [SerializeField] private Companion _companion;
     [SerializeField] ThirdPersonShooterController _shooterController;
+    [SerializeField] Transform _spawnBulletPosition;
 
 
     private Coroutine AttackCoroutine;
@@ -30,6 +31,8 @@ public class CompanionAttack : MonoBehaviour
                 StopCoroutine(AttackCoroutine);
             }
             AttackCoroutine = StartCoroutine(Attack());
+                _shooterController.Shoot(other.transform.position,_spawnBulletPosition.position);
+                Debug.Log("Companion tried to attack");
         }
     }
 
@@ -40,7 +43,7 @@ public class CompanionAttack : MonoBehaviour
             _attackableObjects.Remove(attackable);
             if (_attackableObjects.Count == 0)
             {
-                StopCoroutine(AttackCoroutine);
+                //StopCoroutine(AttackCoroutine);
             }
         }
     }

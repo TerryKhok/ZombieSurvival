@@ -9,38 +9,38 @@ using UnityEngine.UI;
 
 public class ThirdPersonMovement : MonoBehaviour
 {
-    //ãƒ¼ãƒ¼ãƒ¼ãƒ¼ãƒ¼ãƒ¼ãƒ¼ãƒ¼ãƒ¼ãƒ¼å¤‰æ•°å®£è¨€ãƒ¼ãƒ¼ãƒ¼ãƒ¼ãƒ¼ãƒ¼ãƒ¼ãƒ¼ãƒ¼ãƒ¼
+    //[[[[[[[[[[•Ï”éŒ¾[[[[[[[[[[
     [Header("Camera")]
-    [SerializeField] private GameObject _cameraTarget; //ã‚«ãƒ¡ãƒ©è¿½è·¡ç›®æ¨™ã®ä¸­å¿ƒç‚¹
-    [SerializeField] private float _topClamp = 70f; //ã‚«ãƒ¡ãƒ©ä¸Šé™
-    [SerializeField] private float _bottomClamp = -30f; //ã‚«ãƒ¡ãƒ©ä¸‹é™
-    [SerializeField] private float _cameraAngleOverride = 0.0f; //ä¸Šä¸‹é™ã‚’ä¸Šæ›¸ãã™ã‚‹
-    [SerializeField] private bool _lockCameraPosition = false; //ã‚«ãƒ¡ãƒ©ã‚’ãƒ­ãƒƒã‚¯
-    [SerializeField] private float _cameraSensitivity = 1f; //ã‚«ãƒ¡ãƒ©sensitivity
+    [SerializeField] private GameObject _cameraTarget; //ƒJƒƒ‰’ÇÕ–Ú•W‚Ì’†S“_
+    [SerializeField] private float _topClamp = 70f; //ƒJƒƒ‰ãŒÀ
+    [SerializeField] private float _bottomClamp = -30f; //ƒJƒƒ‰‰ºŒÀ
+    [SerializeField] private float _cameraAngleOverride = 0.0f; //ã‰ºŒÀ‚ğã‘‚«‚·‚é
+    [SerializeField] private bool _lockCameraPosition = false; //ƒJƒƒ‰‚ğƒƒbƒN
+    [SerializeField] private float _cameraSensitivity = 1f; //ƒJƒƒ‰sensitivity
 
     [Header("Player")]
-    [SerializeField] private float _walkSpeed = 8f; //æ­©ãé€Ÿåº¦
-    [SerializeField] private float _runSpeed = 20f; //èµ°ã‚‹é€Ÿåº¦
+    [SerializeField] private float _walkSpeed = 8f; //•à‚­‘¬“x
+    [SerializeField] private float _runSpeed = 20f; //‘–‚é‘¬“x
     [Space(10)]
-    [SerializeField] private float _rotationSmoothTime = 0.1f; //å›è»¢é€Ÿåº¦
-    [SerializeField] private float _speedChargeRate = 10f; //åŠ é€Ÿæ¸›é€Ÿ
+    [SerializeField] private float _rotationSmoothTime = 0.1f; //‰ñ“]‘¬“x
+    [SerializeField] private float _speedChargeRate = 10f; //‰Á‘¬Œ¸‘¬
     [Space(10)]
-    [SerializeField] private float _jumpHeight = 1.2f; //ã‚¸ãƒ£ãƒ³ãƒ—é«˜ã•
-    [SerializeField] private float _gravity = -15f; //å¼•åŠ›
+    [SerializeField] private float _jumpHeight = 1.2f; //ƒWƒƒƒ“ƒv‚‚³
+    [SerializeField] private float _gravity = -15f; //ˆø—Í
     [Space(10)]
-    [SerializeField] private float _jumpCooldown = 0.05f; //ã‚¸ãƒ£ãƒ³ãƒ—CD
-    [SerializeField] private float _fallOffsetTime = 0.15f; //FallçŠ¶æ…‹å…¥ã‚‹ç‚ºã«ã„ã‚‹æ™‚é–“
+    [SerializeField] private float _jumpCooldown = 0.05f; //ƒWƒƒƒ“ƒvCD
+    [SerializeField] private float _fallOffsetTime = 0.15f; //Falló‘Ô“ü‚éˆ×‚É‚¢‚éŠÔ
 
-    [Header("isGroundCheck")] //åœ°é¢æ¤œç´¢
+    [Header("isGroundCheck")] //’n–ÊŒŸõ
     [SerializeField] private bool _isGround = true;
-    [SerializeField] private float _isGroundOffset = -0.14f; //æ¤œç´¢èª¤å·®
-    [SerializeField] private float _isGroundCheckRadius = 0.28f; //åœ°é¢æ¤œç´¢åŠå¾„(Character ControlleråŠå¾„ã¨åŒã˜)
-    [SerializeField] private LayerMask _groundLayers; //æ¤œç´¢ãƒ¬ã‚¤ãƒ¤ãƒ¼
+    [SerializeField] private float _isGroundOffset = -0.14f; //ŒŸõŒë·
+    [SerializeField] private float _isGroundCheckRadius = 0.28f; //’n–ÊŒŸõ”¼Œa(Character Controller”¼Œa‚Æ“¯‚¶)
+    [SerializeField] private LayerMask _groundLayers; //ŒŸõƒŒƒCƒ„[
 
     [Header("SFX")]
     [SerializeField] AudioClip _landingAudioClip;
     [SerializeField] AudioClip[] _footstepAudioClip;
-    [SerializeField] private float _footstepAudioVolume = 0.5f; //è¶³éŸ³éŸ³é‡
+    [SerializeField] private float _footstepAudioVolume = 0.5f; //‘«‰¹‰¹—Ê
 
     [Header("Death")]
     [SerializeField] private float _deathTime = 10.0f;
@@ -54,12 +54,12 @@ public class ThirdPersonMovement : MonoBehaviour
     private float _cinemachineTargetPitch;
 
     //Player
-    private float _speed; //é€Ÿåº¦
-    private float _animationBlend; //ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³
-    private float _targetRotation = 0.0f; //å›è»¢ç›®æ¨™
+    private float _speed; //‘¬“x
+    private float _animationBlend; //ƒAƒjƒ[ƒVƒ‡ƒ“
+    private float _targetRotation = 0.0f; //‰ñ“]–Ú•W
     private float _rotationSmoothVelocity;
     private float _verticalVelocity;
-    private float _terminalVelocity = 53f; //æœ€é«˜é€Ÿåº¦
+    private float _terminalVelocity = 53f; //Å‚‘¬“x
 
     //Timeout deltatime
     private float _jumpTimeoutDelta;
@@ -79,7 +79,7 @@ public class ThirdPersonMovement : MonoBehaviour
     //Death
     private float _deathScreenAlpha = 0f;
 
-    //ã‚­ãƒ£ã‚·ãƒ¥ãƒ¼
+    //ƒLƒƒƒVƒ…[
     private Animator _animator;
     private CharacterController _controller;
     private StarterAssetsInputs _input;
@@ -92,20 +92,20 @@ public class ThirdPersonMovement : MonoBehaviour
     private const float _threshold = 0.01f;
 
     private bool _hasAnimator;
-    //ãƒ¼ãƒ¼ãƒ¼ãƒ¼ãƒ¼ãƒ¼ãƒ¼ãƒ¼ãƒ¼ãƒ¼endå¤‰æ•°å®£è¨€ãƒ¼ãƒ¼ãƒ¼ãƒ¼ãƒ¼ãƒ¼ãƒ¼ãƒ¼ãƒ¼ãƒ¼
+    //[[[[[[[[[[end•Ï”éŒ¾[[[[[[[[[[
 
 
     private void Awake()
     {
-        if (_mainCamera == null) //ã‚«ãƒ¡ãƒ©æƒ…å ±ã‚’å–ã‚‹
+        if (_mainCamera == null) //ƒJƒƒ‰î•ñ‚ğæ‚é
             _mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
     }
 
 
     private void Start()
     {
-        //å„ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆæƒ…å ±ã‚’å–ã‚‹
-        _cinemachineTargetYaw = _cameraTarget.transform.rotation.eulerAngles.y; //ã‚«ãƒ¡ãƒ©å·¦å³è§’åº¦ã‚’ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã¨ä¸€ç·’ã«ã™ã‚‹
+        //ŠeƒRƒ“ƒ|[ƒlƒ“ƒgî•ñ‚ğæ‚é
+        _cinemachineTargetYaw = _cameraTarget.transform.rotation.eulerAngles.y; //ƒJƒƒ‰¶‰EŠp“x‚ğƒvƒŒƒCƒ„[‚Æˆê‚É‚·‚é
         _hasAnimator = TryGetComponent(out _animator);
         _controller = GetComponent<CharacterController>();
         _input = GetComponent<StarterAssetsInputs>();
@@ -116,10 +116,10 @@ public class ThirdPersonMovement : MonoBehaviour
         _audioManager = FindObjectOfType<AudioManager>();
         AssignAnimationIDs();
 
-        Cursor.visible = false;  //ã‚«ãƒ¼ã‚½ãƒ«éè¡¨ç¤º
+        Cursor.visible = false;  //ƒJ[ƒ\ƒ‹”ñ•\¦
         Cursor.lockState = CursorLockMode.Locked;
 
-        _fallTimeoutDelta = _fallOffsetTime; //èª¤å·®ã‚’ãƒªã‚»ãƒƒãƒˆ
+        _fallTimeoutDelta = _fallOffsetTime; //Œë·‚ğƒŠƒZƒbƒg
         _jumpTimeoutDelta = _jumpCooldown;
 
         _audioManager.Play("BGM");
@@ -147,7 +147,7 @@ public class ThirdPersonMovement : MonoBehaviour
                 _deathScreen.color = new Color(0.8f, 0.15f, 0.15f, _deathScreenAlpha);
                 if (_deathTime < 0.0f)
                 {
-                    Cursor.visible = true;  //ã‚«ãƒ¼ã‚½ãƒ«è¡¨ç¤º
+                    Cursor.visible = true;  //ƒJ[ƒ\ƒ‹•\¦
                     Cursor.lockState = CursorLockMode.None;
                     _sceneTransition.StartSceneTransitionResult();
                 }
@@ -162,7 +162,7 @@ public class ThirdPersonMovement : MonoBehaviour
     }
 
 
-    //ãƒ¼ãƒ¼ãƒ¼ãƒ¼ãƒ¼ãƒ¼ãƒ¼ãƒ¼ãƒ¼ãƒ¼privateé–¢æ•°ãƒ¼ãƒ¼ãƒ¼ãƒ¼ãƒ¼ãƒ¼ãƒ¼ãƒ¼ãƒ¼ãƒ¼
+    //[[[[[[[[[[privateŠÖ”[[[[[[[[[[
     private void AssignAnimationIDs()
     {
         _animIDSpeed = Animator.StringToHash("Speed");
@@ -174,12 +174,12 @@ public class ThirdPersonMovement : MonoBehaviour
     }
 
 
-    //åœ°é¢æ¤œç´¢é–¢æ•°
+    //’n–ÊŒŸõŠÖ”
     private void IsGroundCheck()
     {
         Vector3 spherePosition = new Vector3(transform.position.x,
             transform.position.y - _isGroundOffset, transform.position.z);
-        _isGround = Physics.CheckSphere(spherePosition, _isGroundCheckRadius, //çƒä½“ã‚¨ãƒªã‚¢ã§åœ°é¢ã‚’æ¤œç´¢ã™ã‚‹
+        _isGround = Physics.CheckSphere(spherePosition, _isGroundCheckRadius, //‹…‘ÌƒGƒŠƒA‚Å’n–Ê‚ğŒŸõ‚·‚é
             _groundLayers, QueryTriggerInteraction.Ignore);
 
         if (_hasAnimator)
@@ -189,46 +189,46 @@ public class ThirdPersonMovement : MonoBehaviour
     }
 
 
-    //ã‚«ãƒ¡ãƒ©æ“ä½œé–¢æ•°
+    //ƒJƒƒ‰‘€ìŠÖ”
     private void CameraRotation()
     {
         if (_input.look.sqrMagnitude >= _threshold && !_lockCameraPosition)
-        { //å…¥åŠ›æœ‰ç„¡ã‚’ãƒã‚§ãƒƒã‚¯ï¼†ï¼†ã‚«ãƒ¡ãƒ©ãƒ­ãƒƒã‚¯ã—ã¦ãªã„
+        { //“ü—Í—L–³‚ğƒ`ƒFƒbƒN••ƒJƒƒ‰ƒƒbƒN‚µ‚Ä‚È‚¢
             float deltaTimeMultiplier = 1.0f;
 
             _cinemachineTargetYaw += _input.look.x * deltaTimeMultiplier * _cameraSensitivity;
             _cinemachineTargetPitch += _input.look.y * deltaTimeMultiplier * _cameraSensitivity;
         }
 
-        //ã‚«ãƒ¡ãƒ©å›è»¢ã‚’åˆ¶é™
+        //ƒJƒƒ‰‰ñ“]‚ğ§ŒÀ
         _cinemachineTargetYaw = ClampAngle(_cinemachineTargetYaw, float.MinValue, float.MaxValue);
         _cinemachineTargetPitch = ClampAngle(_cinemachineTargetPitch, _bottomClamp, _topClamp);
 
-        //ã‚«ãƒ¡ãƒ©è¿½è·¡ç›®æ¨™ã®æ–¹å‘ã‚’ã‚«ãƒ¡ãƒ©ã¨ä¸€ç·’ã«ã™ã‚‹
+        //ƒJƒƒ‰’ÇÕ–Ú•W‚Ì•ûŒü‚ğƒJƒƒ‰‚Æˆê‚É‚·‚é
         _cameraTarget.transform.rotation = Quaternion.Euler(_cinemachineTargetPitch +
             _cameraAngleOverride, _cinemachineTargetYaw, 0.0f);
     }
 
 
-    //ç§»å‹•é–¢æ•°
+    //ˆÚ“®ŠÖ”
     private void Movement()
     {
-        float targetSpeed = _input.sprint ? _runSpeed : _walkSpeed; //æ­©ããƒ»èµ°ã‚‹çŠ¶æ…‹ã§ç›®æ¨™é€Ÿåº¦ã‚’æ±ºã‚ã‚‹
+        float targetSpeed = _input.sprint ? _runSpeed : _walkSpeed; //•à‚­E‘–‚éó‘Ô‚Å–Ú•W‘¬“x‚ğŒˆ‚ß‚é
 
-        if (_input.move == Vector2.zero) //å…¥åŠ›ãªã„æ™‚ã€é€Ÿåº¦ï¼
+        if (_input.move == Vector2.zero) //“ü—Í‚È‚¢A‘¬“x‚O
             targetSpeed = 0.0f;
 
-        float currentHorizontalSpeed = new Vector3(_controller.velocity.x, 0.0f, _controller.velocity.z).magnitude; //ä»Šã®é€Ÿåº¦ã‚’å–ã‚‹
-        float speedOffset = 0.1f; //èª¤å·®
+        float currentHorizontalSpeed = new Vector3(_controller.velocity.x, 0.0f, _controller.velocity.z).magnitude; //¡‚Ì‘¬“x‚ğæ‚é
+        float speedOffset = 0.1f; //Œë·
 
-        //ç›®æ¨™é€Ÿåº¦ã¾ã§å¾ã€…ã«åŠ é€Ÿæ¸›é€Ÿ
+        //–Ú•W‘¬“x‚Ü‚Å™X‚É‰Á‘¬Œ¸‘¬
         if (currentHorizontalSpeed < targetSpeed - speedOffset ||
             currentHorizontalSpeed > targetSpeed + speedOffset)
         {
             _speed = Mathf.Lerp(currentHorizontalSpeed, targetSpeed,
                 Time.deltaTime * _speedChargeRate);
 
-            _speed = Mathf.Round(_speed * 1000f) / 1000f; //é€Ÿåº¦ã‚’å°æ•°ç‚¹3ä½ã¾ã§å››æ¨äº”å…¥
+            _speed = Mathf.Round(_speed * 1000f) / 1000f; //‘¬“x‚ğ¬”“_3ˆÊ‚Ü‚ÅlÌŒÜ“ü
         }
         else
         {
@@ -238,9 +238,9 @@ public class ThirdPersonMovement : MonoBehaviour
         _animationBlend = Mathf.Lerp(_animationBlend, targetSpeed, Time.deltaTime * _speedChargeRate);
         if (_animationBlend < 0.01f) _animationBlend = 0f;
 
-        Vector3 inputDirection = new Vector3(_input.move.x, 0f, _input.move.y).normalized; //ç§»å‹•æ–¹å‘ã‚’æ±ºã‚ã‚‹
+        Vector3 inputDirection = new Vector3(_input.move.x, 0f, _input.move.y).normalized; //ˆÚ“®•ûŒü‚ğŒˆ‚ß‚é
 
-        //å…¥åŠ›ã‚ã‚‹æ™‚ã€ã‚­ãƒ£ãƒ©ã‚’å›è»¢ã™ã‚‹
+        //“ü—Í‚ ‚éAƒLƒƒƒ‰‚ğ‰ñ“]‚·‚é
         if (_input.move != Vector2.zero)
         {
             _targetRotation = Mathf.Atan2(inputDirection.x, inputDirection.z) * Mathf.Rad2Deg +
@@ -250,17 +250,17 @@ public class ThirdPersonMovement : MonoBehaviour
 
             if (_rotateOnMove)
             {
-                transform.rotation = Quaternion.Euler(0.0f, rotation, 0.0f); //ã‚­ãƒ£ãƒ©ã‚’ç§»å‹•æ–¹å‘ã«å›è»¢ã™ã‚‹
+                transform.rotation = Quaternion.Euler(0.0f, rotation, 0.0f); //ƒLƒƒƒ‰‚ğˆÚ“®•ûŒü‚É‰ñ“]‚·‚é
             }
         }
 
-        //ã‚­ãƒ£ãƒ©ã‚’ç§»å‹•ã™ã‚‹
+        //ƒLƒƒƒ‰‚ğˆÚ“®‚·‚é
         Vector3 targetDir = Quaternion.Euler(0.0f, _targetRotation, 0.0f) * Vector3.forward;
 
-        _controller.Move(targetDir.normalized * (_speed * Time.deltaTime) + //å·¦å³ç§»å‹•é€Ÿåº¦
-            new Vector3(0f, _verticalVelocity, 0f) * Time.deltaTime); //ä¸Šä¸‹ç§»å‹•é€Ÿåº¦
+        _controller.Move(targetDir.normalized * (_speed * Time.deltaTime) + //¶‰EˆÚ“®‘¬“x
+            new Vector3(0f, _verticalVelocity, 0f) * Time.deltaTime); //ã‰ºˆÚ“®‘¬“x
 
-        //ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³
+        //ƒAƒjƒ[ƒVƒ‡ƒ“
         if (_hasAnimator)
         {
             _animator.SetFloat(_animIDSpeed, _animationBlend);
@@ -269,14 +269,14 @@ public class ThirdPersonMovement : MonoBehaviour
     }
 
 
-    //ã‚¸ãƒ£ãƒ³ãƒ—ã¨å¼•åŠ›å‡¦ç†é–¢æ•°
+    //ƒWƒƒƒ“ƒv‚Æˆø—Íˆ—ŠÖ”
     private void JumpAndGravity()
     {
         if (_isGround)
         {
-            _fallTimeoutDelta = _fallOffsetTime; //åˆæœŸåŒ–
+            _fallTimeoutDelta = _fallOffsetTime; //‰Šú‰»
 
-            //ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³
+            //ƒAƒjƒ[ƒVƒ‡ƒ“
             if (_hasAnimator)
             {
                 _animator.SetBool(_animIDJump, false);
@@ -288,27 +288,27 @@ public class ThirdPersonMovement : MonoBehaviour
                 _verticalVelocity = -2f;
             }
 
-            //ã‚¸ãƒ£ãƒ³ãƒ—å‡¦ç†
+            //ƒWƒƒƒ“ƒvˆ—
             if (_input.jump && _jumpTimeoutDelta <= 0.0f)
             {
-                _verticalVelocity = Mathf.Sqrt(_jumpHeight * -2f * _gravity); //jumpHeightã‚’é”æˆã™ã‚‹ç‚ºã®é€Ÿåº¦
+                _verticalVelocity = Mathf.Sqrt(_jumpHeight * -2f * _gravity); //jumpHeight‚ğ’B¬‚·‚éˆ×‚Ì‘¬“x
 
-                //ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³
+                //ƒAƒjƒ[ƒVƒ‡ƒ“
                 if (_hasAnimator)
                 {
                     _animator.SetBool(_animIDJump, true);
                 }
             }
 
-            //ã‚¸ãƒ£ãƒ³ãƒ—CDå‡¦ç†
+            //ƒWƒƒƒ“ƒvCDˆ—
             if (_jumpTimeoutDelta >= 0.0f)
             {
                 _jumpTimeoutDelta -= Time.deltaTime;
             }
         }
-        else //è½ã¡ã‚‹å‡¦ç†
+        else //—‚¿‚éˆ—
         {
-            _jumpTimeoutDelta = _jumpCooldown; //åˆæœŸåŒ–
+            _jumpTimeoutDelta = _jumpCooldown; //‰Šú‰»
 
             if (_fallTimeoutDelta >= 0.0f)
             {
@@ -316,17 +316,17 @@ public class ThirdPersonMovement : MonoBehaviour
             }
             else
             {
-                // //ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³
+                // //ƒAƒjƒ[ƒVƒ‡ƒ“
                 if (_hasAnimator)
                 {
                     _animator.SetBool(_animIDFall, true);
                 }
             }
 
-            _input.jump = false; //åœ°é¢ã«ã„ãªã„ã¨ã‚¸ãƒ£ãƒ³ãƒ—å‡ºæ¥ãªã„
+            _input.jump = false; //’n–Ê‚É‚¢‚È‚¢‚ÆƒWƒƒƒ“ƒvo—ˆ‚È‚¢
         }
 
-        //å¼•åŠ›å‡¦ç†
+        //ˆø—Íˆ—
         if (_verticalVelocity < _terminalVelocity)
         {
             _verticalVelocity += _gravity * Time.deltaTime;
@@ -342,7 +342,7 @@ public class ThirdPersonMovement : MonoBehaviour
     }
 
 
-    //åœ°é¢æ¤œç´¢ã‚¨ãƒªã‚¢ã‚’æã
+    //’n–ÊŒŸõƒGƒŠƒA‚ğ•`‚­
     private void OnDrawGizmosSelected()
     {
         Color transparentGreen = new Color(0.0f, 1.0f, 0.0f, 0.35f);
@@ -356,7 +356,7 @@ public class ThirdPersonMovement : MonoBehaviour
     }
 
 
-    //è¶³éŸ³å‡¦ç†
+    //‘«‰¹ˆ—
     private void OnFootstep(AnimationEvent animationEvent)
     {
         if (animationEvent.animatorClipInfo.weight > 0.5f)
@@ -371,7 +371,7 @@ public class ThirdPersonMovement : MonoBehaviour
     }
 
 
-    // ç€åœ°éŸ³å‡¦ç†
+    // ’…’n‰¹ˆ—
     private void OnLand(AnimationEvent animationEvent)
     {
         if (animationEvent.animatorClipInfo.weight > 0.5f)
@@ -380,17 +380,17 @@ public class ThirdPersonMovement : MonoBehaviour
                 transform.TransformPoint(_controller.center), _footstepAudioVolume);
         }
     }
-    //ãƒ¼ãƒ¼ãƒ¼ãƒ¼ãƒ¼ãƒ¼ãƒ¼ãƒ¼ãƒ¼ãƒ¼endPrivateé–¢æ•°ãƒ¼ãƒ¼ãƒ¼ãƒ¼ãƒ¼ãƒ¼ãƒ¼ãƒ¼ãƒ¼ãƒ¼
+    //[[[[[[[[[[endPrivateŠÖ”[[[[[[[[[[
 
 
-    //ãƒ¼ãƒ¼ãƒ¼ãƒ¼ãƒ¼ãƒ¼ãƒ¼ãƒ¼ãƒ¼ãƒ¼Publicé–¢æ•°ãƒ¼ãƒ¼ãƒ¼ãƒ¼ãƒ¼ãƒ¼ãƒ¼ãƒ¼ãƒ¼ãƒ¼
-    //ã‚«ãƒ¡ãƒ©sensitivityã‚’å¤‰æ›´ã™ã‚‹é–¢æ•°
+    //[[[[[[[[[[PublicŠÖ”[[[[[[[[[[
+    //ƒJƒƒ‰sensitivity‚ğ•ÏX‚·‚éŠÖ”
     public void SetSensitivity(float newSensitivity)
     {
         _cameraSensitivity = newSensitivity;
     }
 
-    //ç§»å‹•ã™ã‚‹æ™‚ã‚­ãƒ£ãƒ©ã‚’å›è»¢ã™ã‚‹ã‹ã©ã†ã‹é–¢æ•°
+    //ˆÚ“®‚·‚éƒLƒƒƒ‰‚ğ‰ñ“]‚·‚é‚©‚Ç‚¤‚©ŠÖ”
     public void SetRotateOnMove(bool newRotateOnMove)
     {
         _rotateOnMove = newRotateOnMove;
@@ -404,6 +404,6 @@ public class ThirdPersonMovement : MonoBehaviour
     public void PlayExplotionSFX(){
         _audioManager.Play("Explosion");
     }
-    //ãƒ¼ãƒ¼ãƒ¼ãƒ¼ãƒ¼ãƒ¼ãƒ¼ãƒ¼ãƒ¼ãƒ¼endPublicé–¢æ•°ãƒ¼ãƒ¼ãƒ¼ãƒ¼ãƒ¼ãƒ¼ãƒ¼ãƒ¼ãƒ¼ãƒ¼
+    //[[[[[[[[[[endPublicŠÖ”[[[[[[[[[[
 
 }
