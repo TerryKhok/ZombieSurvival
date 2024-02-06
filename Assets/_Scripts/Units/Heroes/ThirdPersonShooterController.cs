@@ -179,7 +179,7 @@ public class ThirdPersonShooterController : MonoBehaviour
         {
             _audioManager.Play(_gunShotSFX);
         }
-        if (_gunCockSFX != null)
+        if (_gunCockSFX != ""&&_gunCockSFX != null)
             Invoke("PlayShotgunCock", 0.3f);
 
         Invoke("ResetShot", _shootRate);
@@ -200,7 +200,8 @@ public class ThirdPersonShooterController : MonoBehaviour
     private void Reload()
     {
         _isReloading = true;
-        _crosshairController.DoReload();
+
+        if (_isControlled) { _crosshairController.DoReload(); }
         Invoke("ReloadFinished", _reloadSpeed);
     }
 
@@ -223,7 +224,8 @@ public class ThirdPersonShooterController : MonoBehaviour
     //íeåÇÇ¬ëÄçÏä«óùä÷êî
     public void ShootInput()
     {
-        if (_isControlled){
+        if (_isControlled)
+        {
             if (_allowButtonHold)
             {
                 _isShooting = Input.GetKey(KeyCode.Mouse0);
@@ -232,18 +234,16 @@ public class ThirdPersonShooterController : MonoBehaviour
             {
                 _isShooting = Input.GetKeyDown(KeyCode.Mouse0);
             }
-        }
 
-        if (Input.GetKeyDown(KeyCode.R) && _bulletsLeft < _magazineSize && !_isReloading)
-        {
-            _crosshairController.SetReloadSpeed(_reloadSpeed);
-
-            Reload();
+            if (Input.GetKeyDown(KeyCode.R) && _bulletsLeft < _magazineSize && !_isReloading)
+            {
+                _crosshairController.SetReloadSpeed(_reloadSpeed);
+                Reload();
+            }
         }
 
         if (_readyToShoot && _isShooting && !_isReloading)
         {
-        Debug.Log(_readyToShoot + "," + _isShooting + "," + _isReloading);
             if (_bulletsLeft > 0)
             {
                 _bulletsShot = _bulletsPerTap;
@@ -251,7 +251,7 @@ public class ThirdPersonShooterController : MonoBehaviour
             }
             else
             {
-                _crosshairController.SetReloadSpeed(_reloadSpeed);
+                if (_isControlled) { _crosshairController.SetReloadSpeed(_reloadSpeed); }
                 Reload();
             }
         }
