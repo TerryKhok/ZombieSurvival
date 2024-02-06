@@ -5,17 +5,24 @@ using UnityEngine;
 public class CompanionAttack : MonoBehaviour
 {
     //ーーーーーーーーーー変数宣言ーーーーーーーーーー
+    [SerializeField] Transform _companionGameobject;
     [SerializeField] Transform _spawnBulletPosition; //弾を生成する位置
     [SerializeField] ThirdPersonShooterController _shooterController;
 
     [SerializeField] private List<BulletTarget> _attackableObjects = new List<BulletTarget>(); //範囲内敵のリスト
 
+    public bool IsShooting = false;
+
     private Coroutine AttackCoroutine;
+
+    private bool _isRunning = false;
+    private Vector3 _shootDir;
     //ーーーーーーーーーーend変数宣言ーーーーーーーーーー
 
 
     private void Awake()
     {
+        _companionGameobject = GetComponentInParent<Companion>().transform;
         _shooterController = GetComponent<ThirdPersonShooterController>();
     }
 
@@ -30,7 +37,10 @@ public class CompanionAttack : MonoBehaviour
             {
                 StopCoroutine(AttackCoroutine);
             }
-            AttackCoroutine = StartCoroutine(Attack()); //攻撃処理Coroutine
+            if (!_isRunning)
+            {
+                AttackCoroutine = StartCoroutine(Attack()); //攻撃処理Coroutine
+            }
         }
     }
 
@@ -44,6 +54,7 @@ public class CompanionAttack : MonoBehaviour
             if (_attackableObjects.Count == 0) //リストに敵ない時攻撃停止
             {
                 StopCoroutine(AttackCoroutine);
+                IsShooting = false;
                 _shooterController.SetIsShooting(false);
             }
         }
@@ -56,7 +67,11 @@ public class CompanionAttack : MonoBehaviour
     {
         while (_attackableObjects.Count > 0)
         {
+            IsShooting = true;
             BulletTarget closestAttackable = FindClosestAttackable(); //一番近い敵をGetする
+
+            _shootDir = (closestAttackable.transform.position -  _companionGameobject.position).normalized;
+            _companionGameobject.forward = Vector3.Lerp(_companionGameobject.forward, _shootDir, Time.deltaTime * 20f);
 
             _shooterController.SetBulletSpawnPos(_spawnBulletPosition); //弾生成位置をSet
             _shooterController.SetIsShooting(true); //isShooting状態をSet
@@ -87,4 +102,12 @@ public class CompanionAttack : MonoBehaviour
         return _attackableObjects[clostestIndex];
     }
     //ーーーーーーーーーーendPrivate関数ーーーーーーーーーー
+
+
+    //ーーーーーーーーーーPublic関数ーーーーーーーーーー
+    public void SetIsRunning(bool newState)
+    {
+        _isRunning = newState;
+    }
+    //ーーーーーーーーーーendPublic関数ーーーーーーーーーー
 }

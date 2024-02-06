@@ -266,6 +266,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 877a75fd85b487f4dad72fe6c6802808, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _isControlled: 0
   _playerGameobject: {fileID: 3467570374202256096}
   _aimVirtualCamera: {fileID: 0}
   _normalSensitivity: 2
@@ -373,6 +374,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 877a75fd85b487f4dad72fe6c6802808, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _isControlled: 0
   _playerGameobject: {fileID: 3467570374202256096}
   _aimVirtualCamera: {fileID: 0}
   _normalSensitivity: 2
@@ -443,6 +445,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 877a75fd85b487f4dad72fe6c6802808, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _isControlled: 0
   _playerGameobject: {fileID: 3467570374202256096}
   _aimVirtualCamera: {fileID: 0}
   _normalSensitivity: 2
@@ -513,6 +516,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 877a75fd85b487f4dad72fe6c6802808, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _isControlled: 0
   _playerGameobject: {fileID: 3467570374202256096}
   _aimVirtualCamera: {fileID: 0}
   _normalSensitivity: 2
@@ -583,6 +587,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 877a75fd85b487f4dad72fe6c6802808, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _isControlled: 0
   _playerGameobject: {fileID: 3467570374202256096}
   _aimVirtualCamera: {fileID: 0}
   _normalSensitivity: 2
@@ -653,6 +658,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 877a75fd85b487f4dad72fe6c6802808, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _isControlled: 0
   _playerGameobject: {fileID: 3467570374202256096}
   _aimVirtualCamera: {fileID: 0}
   _normalSensitivity: 2
@@ -1174,6 +1180,7 @@ GameObject:
   - component: {fileID: 960210363270476838}
   - component: {fileID: 960210363270476862}
   - component: {fileID: 960210363270476849}
+  - component: {fileID: 7432794447996098664}
   m_Layer: 9
   m_Name: Player
   m_TagString: Player
@@ -1438,6 +1445,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 877a75fd85b487f4dad72fe6c6802808, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _isControlled: 0
   _playerGameobject: {fileID: 0}
   _aimVirtualCamera: {fileID: 0}
   _normalSensitivity: 1
@@ -1496,6 +1504,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebfe9a747436bc04188dc1c7f365c581, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &7432794447996098664
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3467570374202256096}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83375defa64993a4288f0868fe7bea30, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <State>k__BackingField: 0
 --- !u!1 &3536302754745249843
 GameObject:
   m_ObjectHideFlags: 0

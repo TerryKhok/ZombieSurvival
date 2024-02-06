@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Data.Common;
+using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
@@ -61,7 +62,7 @@ public class CompanionController : MonoBehaviour
         {
             WalkAndGunToPlayer();
         }
-        else //Idle状態の時プレイヤーから外に向く
+        else if(!_companionAttack.IsShooting!)//Idle状態の時プレイヤーから外に向く
         {
             IdleAndFaceOutwards();
         }
@@ -92,7 +93,7 @@ public class CompanionController : MonoBehaviour
             {
                 //プレイヤーを向いてる時の反対向き
                 Quaternion outwardDir = Quaternion.LookRotation(_player.transform.position - transform.position) * Quaternion.Euler(0, 180, 0);
-                transform.rotation = Quaternion.Slerp(transform.rotation, outwardDir, 0.01f);
+                transform.rotation = Quaternion.Slerp(transform.rotation, outwardDir, 0.001f);
             }
         }
     }
