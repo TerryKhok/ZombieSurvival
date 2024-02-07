@@ -151,9 +151,11 @@ public class ThirdPersonShooterController : MonoBehaviour
         float xSpread = Random.Range(-1f, 1f);
         float ySpread = Random.Range(-1f, 1f);
         float zSpread = Random.Range(-1f, 1f);
+        float yOffset = (_isControlled) ? 0 : 1.5f;
 
         //íeÇÃï˚å¸ÇåvéZ
-        Vector3 aimDir = (_targetPosition - _spawnBulletPosition.position).normalized + (new Vector3(xSpread, ySpread, zSpread).normalized * _spread);
+        Vector3 aimDir = (_targetPosition + new Vector3(0, yOffset, 0) - _spawnBulletPosition.position).normalized
+                        + (new Vector3(xSpread, ySpread, zSpread).normalized * _spread);
 
         //íeÇê∂ê¨
         Instantiate(_muzzleFlash, _spawnBulletPosition.position, Quaternion.LookRotation(aimDir, Vector3.up));
@@ -179,7 +181,7 @@ public class ThirdPersonShooterController : MonoBehaviour
         {
             _audioManager.Play(_gunShotSFX);
         }
-        if (_gunCockSFX != ""&&_gunCockSFX != null)
+        if (_gunCockSFX != "" && _gunCockSFX != null)
             Invoke("PlayShotgunCock", 0.3f);
 
         Invoke("ResetShot", _shootRate);

@@ -144,7 +144,7 @@ MonoBehaviour:
   armor:
     _baseValue: 0
   _scoreSystem: {fileID: 0}
-  _score: 10
+  _score: 100
   _enemySpawnManager: {fileID: 0}
 --- !u!114 &2742153885630992872
 MonoBehaviour:

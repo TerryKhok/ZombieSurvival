@@ -26,6 +26,12 @@ public class CompanionAttack : MonoBehaviour
         _shooterController = GetComponent<ThirdPersonShooterController>();
     }
 
+    private void Update() {
+        if(_attackableObjects.Count == 0){
+                IsShooting = false;
+        }
+    }
+
 
     //敵が範囲内に入る時の処理
     private void OnTriggerEnter(Collider other)
@@ -54,7 +60,6 @@ public class CompanionAttack : MonoBehaviour
             if (_attackableObjects.Count == 0) //リストに敵ない時攻撃停止
             {
                 StopCoroutine(AttackCoroutine);
-                IsShooting = false;
                 _shooterController.SetIsShooting(false);
             }
         }
@@ -70,7 +75,7 @@ public class CompanionAttack : MonoBehaviour
             IsShooting = true;
             BulletTarget closestAttackable = FindClosestAttackable(); //一番近い敵をGetする
 
-            _shootDir = (closestAttackable.transform.position -  _companionGameobject.position).normalized;
+            _shootDir = (closestAttackable.transform.position - _companionGameobject.position).normalized;
             _companionGameobject.forward = Vector3.Lerp(_companionGameobject.forward, _shootDir, Time.deltaTime * 20f);
 
             _shooterController.SetBulletSpawnPos(_spawnBulletPosition); //弾生成位置をSet
@@ -92,6 +97,10 @@ public class CompanionAttack : MonoBehaviour
         int clostestIndex = 0;
         for (int i = 0; i < _attackableObjects.Count; i++)
         {
+            if (_attackableObjects[i] == null)
+            {
+                _attackableObjects.Remove(_attackableObjects[i]);
+            }
             float distance = Vector3.Distance(transform.position, _attackableObjects[i].transform.position);
             if (distance < closestDistance)
             {

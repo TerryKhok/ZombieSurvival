@@ -24,6 +24,7 @@ public class EnemyController : MonoBehaviour
     private BoxCollider _col;
     private AudioManager _audioManager;
     private AudioSource _audioSrc;
+    private BulletTarget _bulletTarget;
 
     //animation IDs
     private int _animIDWalk;
@@ -43,6 +44,7 @@ public class EnemyController : MonoBehaviour
         _col = GetComponentInChildren<BoxCollider>();
         _audioManager = FindObjectOfType<AudioManager>();
         _audioSrc = GetComponent<AudioSource>();
+        _bulletTarget = GetComponent<BulletTarget>();
 
         AssignAnimationIDs();
 
@@ -80,6 +82,7 @@ public class EnemyController : MonoBehaviour
             _agent.enabled = false;
             _col.enabled = false;
             _audioSrc.Stop();
+            Destroy(_bulletTarget);
 
             _deathTime -= Time.deltaTime;
             if (_deathTime < 5.0f)
