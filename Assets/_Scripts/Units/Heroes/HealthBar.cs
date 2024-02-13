@@ -5,16 +5,25 @@ using UnityEngine.UI;
 
 public class HealthBar : MonoBehaviour
 {
-    [SerializeField]private Slider _slider;
+    [SerializeField]private Slider _currentHpSlider;
+    [SerializeField]private Slider _damageTakenSlider;
+
+    private void FixedUpdate() {
+        if(_damageTakenSlider.value>_currentHpSlider.value){
+            _damageTakenSlider.value-=.5f;
+        }
+    }
 
     //ç≈ëÂHPê›íË
     public void SetMaxHealth(int maxHealth){
-        _slider.maxValue = maxHealth;
+        _currentHpSlider.maxValue = maxHealth;
+        _damageTakenSlider.maxValue = maxHealth;
     }
 
     //ç°ÇÃHPê›íË
     public void SetCurrentHealth(int curHealth){
-        _slider.value = curHealth;
+        _currentHpSlider.value = curHealth;
     }
+
 
 }

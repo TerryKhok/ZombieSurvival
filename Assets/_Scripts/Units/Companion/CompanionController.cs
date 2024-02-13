@@ -32,6 +32,8 @@ public class CompanionController : MonoBehaviour
     [SerializeField] private Transform _followDestination; //移動目的地
     [SerializeField] private float _walkRadius; //歩く範囲
     [SerializeField] private float _runRadius; //走る範囲
+    [SerializeField] private float _walkSpeed; //歩く速度
+    [SerializeField] private float _runSpeed; //走る速度
 
     [Header("Cache")]
     [SerializeField] private Player _player; //プレイヤーObject情報
@@ -57,10 +59,12 @@ public class CompanionController : MonoBehaviour
         if (_distanceBetweenPlayer > _runRadius) //走る範囲入ったらプレイヤーの位置まで走る
         {
             RunToPlayer();
+            _companionAttack.SetIsRunning(true);
         }
         else if (_runRadius > _distanceBetweenPlayer && _distanceBetweenPlayer > _walkRadius) //歩く範囲入ったら銃を撃ちながら歩く
         {
             WalkAndGunToPlayer();
+            _companionAttack.SetIsRunning(false);
         }
         else if(!_companionAttack.IsShooting!)//Idle状態の時プレイヤーから外に向く
         {
@@ -73,14 +77,14 @@ public class CompanionController : MonoBehaviour
     //プレイやーの位置に走る関数
     private void RunToPlayer()
     {
-        FollowPlayer(_followDestination.position, 10f);
+        FollowPlayer(_followDestination.position, _runSpeed);
     }
 
 
     //プレイヤーの位置に歩く関数
     private void WalkAndGunToPlayer()
     {
-        FollowPlayer(_followDestination.position, 3f);
+        FollowPlayer(_followDestination.position, _walkSpeed);
     }
 
 

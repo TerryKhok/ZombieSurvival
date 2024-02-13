@@ -22,6 +22,9 @@ public class ThirdPersonShooterController : MonoBehaviour
     [SerializeField] private Transform _spawnBulletPosition; //íeÇÃê∂ê¨ì_
     [SerializeField] private CrosshairController _crosshairController; //crosshairÇÃèàóù
     [SerializeField] private GameObject _muzzleFlash; //MuzzleFlash
+    [SerializeField] private Transform _UIMuzzleFlashPosition; //íeÇÃê∂ê¨ì_
+    [SerializeField] private GameObject _UIMuzzleFlash; //MuzzleFlash
+    [SerializeField] private Transform _UIGunObject;
     [SerializeField] private Text _bulletAmountText; //èeÇÃíeêî
 
     [Header("Gun Stats")]
@@ -158,6 +161,13 @@ public class ThirdPersonShooterController : MonoBehaviour
                         + (new Vector3(xSpread, ySpread, zSpread).normalized * _spread);
 
         //íeÇê∂ê¨
+        //-----UI-----
+        if (_isControlled)
+        {
+            Instantiate(_UIMuzzleFlash, _UIMuzzleFlashPosition.position, Quaternion.LookRotation(aimDir, Vector3.up));
+            _UIGunObject.GetComponent<Vibration>().StartVibration();
+        }
+
         Instantiate(_muzzleFlash, _spawnBulletPosition.position, Quaternion.LookRotation(aimDir, Vector3.up));
         Transform bullet = Instantiate(_prefabBulletProjectile, _spawnBulletPosition.position, Quaternion.LookRotation(aimDir, Vector3.up));
         BulletProjectile bulletProjectile = bullet.GetComponent<BulletProjectile>();

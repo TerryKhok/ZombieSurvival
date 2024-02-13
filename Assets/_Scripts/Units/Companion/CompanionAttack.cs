@@ -26,9 +26,11 @@ public class CompanionAttack : MonoBehaviour
         _shooterController = GetComponent<ThirdPersonShooterController>();
     }
 
-    private void Update() {
-        if(_attackableObjects.Count == 0){
-                IsShooting = false;
+    private void FixedUpdate()
+    {
+        if (_attackableObjects.Count == 0)
+        {
+            IsShooting = false;
         }
     }
 
@@ -43,10 +45,7 @@ public class CompanionAttack : MonoBehaviour
             {
                 StopCoroutine(AttackCoroutine);
             }
-            if (!_isRunning)
-            {
-                AttackCoroutine = StartCoroutine(Attack()); //攻撃処理Coroutine
-            }
+            AttackCoroutine = StartCoroutine(Attack()); //攻撃処理Coroutine
         }
     }
 
@@ -72,16 +71,26 @@ public class CompanionAttack : MonoBehaviour
     {
         while (_attackableObjects.Count > 0)
         {
-            IsShooting = true;
-            BulletTarget closestAttackable = FindClosestAttackable(); //一番近い敵をGetする
+            for (int i = 0; i < _attackableObjects.Count; i++)
+            {
+                if (_attackableObjects[i] == null)
+                {
+                    _attackableObjects.Remove(_attackableObjects[i]);
+                }
+            }
+            if (!_isRunning)
+            {
+                IsShooting = true;
+                BulletTarget closestAttackable = FindClosestAttackable(); //一番近い敵をGetする
 
-            _shootDir = (closestAttackable.transform.position - _companionGameobject.position).normalized;
-            _companionGameobject.forward = Vector3.Lerp(_companionGameobject.forward, _shootDir, Time.deltaTime * 20f);
+                _shootDir = (closestAttackable.transform.position - _companionGameobject.position).normalized;
+                _companionGameobject.forward = Vector3.Lerp(_companionGameobject.forward, _shootDir, Time.deltaTime * 20f);
 
-            _shooterController.SetBulletSpawnPos(_spawnBulletPosition); //弾生成位置をSet
-            _shooterController.SetIsShooting(true); //isShooting状態をSet
-            _shooterController.SetTargetPos(closestAttackable.transform.position + new Vector3(0f, _spawnBulletPosition.position.y, 0f)); //Target位置をSet
-            _shooterController.ShootInput(); //攻撃Inputをシミュレーションする
+                _shooterController.SetBulletSpawnPos(_spawnBulletPosition); //弾生成位置をSet
+                _shooterController.SetIsShooting(true); //isShooting状態をSet
+                _shooterController.SetTargetPos(closestAttackable.transform.position + new Vector3(0f, _spawnBulletPosition.position.y, 0f)); //Target位置をSet
+                _shooterController.ShootInput(); //攻撃Inputをシミュレーションする
+            }
 
             yield return null;
         }
@@ -97,10 +106,6 @@ public class CompanionAttack : MonoBehaviour
         int clostestIndex = 0;
         for (int i = 0; i < _attackableObjects.Count; i++)
         {
-            if (_attackableObjects[i] == null)
-            {
-                _attackableObjects.Remove(_attackableObjects[i]);
-            }
             float distance = Vector3.Distance(transform.position, _attackableObjects[i].transform.position);
             if (distance < closestDistance)
             {

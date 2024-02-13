@@ -405,5 +405,4 @@ public class ThirdPersonMovement : MonoBehaviour
         _audioManager.Play("Explosion");
     }
     //ーーーーーーーーーーendPublic関数ーーーーーーーーーー
-
 }

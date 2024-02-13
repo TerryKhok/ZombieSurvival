@@ -116,7 +116,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 912eb870e56bc71409c0049a95df15f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _lookRadius: 150
+  _lookRadius: 350
   _attackPoint: {fileID: 1826054612361920590}
   _attackRange: 1
   _attackSpeed: 1
@@ -138,7 +138,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40f8609c8d3a71443ac57b31ca193203, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 100
+  maxHealth: 80
   damage:
     _baseValue: 0
   armor:

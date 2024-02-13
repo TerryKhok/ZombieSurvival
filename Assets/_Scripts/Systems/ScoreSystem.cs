@@ -7,6 +7,8 @@ using UnityEngine.SceneManagement;
 public class ScoreSystem : MonoBehaviour
 {
     public static int Score;
+
+    private int textScore;
     string _string;
     Text _text;
 
@@ -14,12 +16,18 @@ public class ScoreSystem : MonoBehaviour
     {
         _text = GetComponent<Text>();
         Score = 0;
-    }
-
-    private void Update()
-    {
         _string = "SCORE: " + Score.ToString("00000000");
         _text.text = _string;
+    }
+
+    private void FixedUpdate()
+    {
+        if (textScore < Score)
+        {
+            textScore += 10;
+            _string = "SCORE: " + textScore.ToString("00000000");
+            _text.text = _string;
+        }
     }
 
     public void AddScore(int score)

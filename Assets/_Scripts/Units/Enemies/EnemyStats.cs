@@ -13,7 +13,7 @@ public class EnemyStats : CharacterStats
     {
         _enemyController = GetComponent<EnemyController>();
         _scoreSystem = FindObjectOfType<ScoreSystem>();
-        _enemySpawnManager = FindObjectOfType<EnemySpawnManager>();
+        _enemySpawnManager = GameObject.FindGameObjectWithTag("SpawnManager").GetComponent<EnemySpawnManager>();
     }
 
     public override void Die()

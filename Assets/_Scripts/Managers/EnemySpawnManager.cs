@@ -1,4 +1,6 @@
+using System.Net.Sockets;
 using System.Security.Cryptography;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class EnemySpawnManager : MonoBehaviour
@@ -8,9 +10,14 @@ public class EnemySpawnManager : MonoBehaviour
     [SerializeField] private float _minSpawnInterval;
     [SerializeField] private GameObject[] _enemiesToSpawn;
     [SerializeField] private Collider _spawnArea;
+    [SerializeField] private Vector3 _spawnOffset;
     [SerializeField] private int _spawnLimit = 200;
 
-    private int _spawnCount = 0;
+    [Header("SupplyManager")]
+    [SerializeField] private bool _isSupplyManager = false;
+    [SerializeField] private Transform _arrow;
+
+    [SerializeField] private int _spawnCount = 0;
     private float _startTime;
 
     private void Start()
@@ -20,7 +27,7 @@ public class EnemySpawnManager : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (Time.time - _startTime > _spawnInterval && _spawnCount <= _spawnLimit)
+        if (Time.time - _startTime > _spawnInterval && _spawnCount < _spawnLimit)
         {
             _startTime = Time.time;
             if (_spawnInterval > _minSpawnInterval)
@@ -31,14 +38,20 @@ public class EnemySpawnManager : MonoBehaviour
         }
     }
 
-    public void SpawnEnemies(Collider spawnableAreaCollider, GameObject[] enemies)
+    private void SpawnEnemies(Collider spawnableAreaCollider, GameObject[] enemies)
     {
         foreach (GameObject enemy in enemies)
         {
             Vector3 spawnPosition = GetRandomSpawnPosition(spawnableAreaCollider);
-            GameObject spawnedEnemy = Instantiate(enemy, spawnPosition, Quaternion.identity);
+            GameObject spawnedEnemy = Instantiate(enemy, spawnPosition + _spawnOffset, Quaternion.identity);
             if (spawnedEnemy)
+            {
+                if (_isSupplyManager)
+                {
+                    _arrow.GetComponent<FaceToward>().SetTarget(spawnedEnemy.transform);
+                }
                 _spawnCount++;
+            }
         }
     }
 
@@ -59,7 +72,7 @@ public class EnemySpawnManager : MonoBehaviour
             foreach (Collider collider in colliders)
             {
                 if (((1 << collider.gameObject.layer) & _layersEnemyCannotSpawnOn) != 0) //bitwise opetarion //‚à‚µcollider‚ªlayer‚ÉŠÜ‚ñ‚¾‚çtrue‚ð–ß‚·
-                { 
+                {
                     isInvalidCollision = true;
                     break;
                 }
@@ -100,7 +113,7 @@ public class EnemySpawnManager : MonoBehaviour
 
     public void MinusSpawnCount()
     {
-        if (_spawnCount! <= 0)
+        if (_spawnCount > 0)
             _spawnCount--;
     }
 }

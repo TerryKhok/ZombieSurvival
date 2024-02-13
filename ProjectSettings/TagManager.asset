@@ -13,6 +13,8 @@ TagManager:
   - Shotgun
   - Sniper
   - Minigun
+  - SpawnManager
+  - SupplyManager
   layers:
   - Default
   - TransparentFX

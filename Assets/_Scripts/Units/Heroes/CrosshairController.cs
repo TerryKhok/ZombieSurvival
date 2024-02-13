@@ -97,7 +97,7 @@ public class CrosshairController : MonoBehaviour
 
         do //reload}‚ğƒŠƒ[ƒhŠÔ‚æ‚èfill‚·‚é
         {
-            _reload.fillAmount += Time.deltaTime * _reloadSpeed;
+            _reload.fillAmount += Time.deltaTime * (1/_reloadSpeed);
             yield return new WaitForEndOfFrame();
         } while (_reload.fillAmount < 1f);
 

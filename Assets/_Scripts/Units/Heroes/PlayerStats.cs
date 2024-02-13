@@ -29,8 +29,12 @@ public class PlayerStats : CharacterStats
     {
         base.TakeDamage(damage);
         _healthbar.SetCurrentHealth(currentHealth);
+        if(damage > 0){
         _animator.SetTrigger(_animIDHurt);
         _audioManager.Play("PlayerHurt");
+        }else{
+            //heal effectß
+        }
     }
 
 
