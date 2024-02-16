@@ -164,6 +164,7 @@ public class ThirdPersonShooterController : MonoBehaviour
         //-----UI-----
         if (_isControlled)
         {
+            _playerGameobject.transform.forward = Vector3.Lerp(_playerGameobject.transform.forward, (_targetPosition + new Vector3(0, yOffset, 0) - _spawnBulletPosition.position).normalized, Time.deltaTime * 20f); //エイムしてる時、キャラをエイム方向に回転する
             Instantiate(_UIMuzzleFlash, _UIMuzzleFlashPosition.position, Quaternion.LookRotation(aimDir, Vector3.up));
             _UIGunObject.GetComponent<Vibration>().StartVibration();
         }
