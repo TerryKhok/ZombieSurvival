@@ -80,7 +80,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _speed: 60
-  _bulletPierceCount: 2
+  _bulletPierceCount: 20
   _vfxHit: {fileID: 1429954232896169630, guid: 83036083a4ebcd34f98131bd3cf6f4d2, type: 3}
   BulletDamage: 20
 --- !u!114 &-8118139539735786994
