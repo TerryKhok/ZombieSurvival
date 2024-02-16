@@ -3,6 +3,7 @@ using Cinemachine;
 using StarterAssets;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using System.Collections;
 
 public class ThirdPersonShooterController : MonoBehaviour
 {
@@ -61,6 +62,7 @@ public class ThirdPersonShooterController : MonoBehaviour
     private bool _isShooting;
     private bool _readyToShoot;
     private bool _isReloading;
+    private bool _isShootnRun;
 
     //ーーーーーーーーーーend変数宣言ーーーーーーーーーー
 
@@ -135,7 +137,7 @@ public class ThirdPersonShooterController : MonoBehaviour
 
             _playerGameobject.transform.forward = Vector3.Lerp(_playerGameobject.transform.forward, aimDirection, Time.deltaTime * 20f); //エイムしてる時、キャラをエイム方向に回転する
         }
-        else
+        else if(!_isShootnRun)
         {
             _aimVirtualCamera.gameObject.SetActive(false);
             _thirdPersonMovement.SetSensitivity(_normalSensitivity);
@@ -164,7 +166,7 @@ public class ThirdPersonShooterController : MonoBehaviour
         //-----UI-----
         if (_isControlled)
         {
-            _playerGameobject.transform.forward = Vector3.Lerp(_playerGameobject.transform.forward, (_targetPosition + new Vector3(0, yOffset, 0) - _spawnBulletPosition.position).normalized, Time.deltaTime * 20f); //エイムしてる時、キャラをエイム方向に回転する
+            RotateToShootDir();
             Instantiate(_UIMuzzleFlash, _UIMuzzleFlashPosition.position, Quaternion.LookRotation(aimDir, Vector3.up));
             _UIGunObject.GetComponent<Vibration>().StartVibration();
         }
@@ -230,7 +232,34 @@ public class ThirdPersonShooterController : MonoBehaviour
         _bulletsLeft = _magazineSize;
         _isReloading = false;
     }
+
+
+    private void RotateToShootDir()
+    {
+        StartCoroutine(RotatingToShootDir());
+    }
     //ーーーーーーーーーーendPrivate関数ーーーーーーーーーー
+
+
+    //ーーーーーーーーーーCoroutine関数ーーーーーーーーーー
+    IEnumerator RotatingToShootDir()
+    {
+        _thirdPersonMovement.SetRotateOnMove(false);
+        float timePassed = 0;
+        _isShootnRun = true;
+                _playerGameobject.transform.forward = Vector3.Lerp(_playerGameobject.transform.forward,
+                    (_targetPosition - _spawnBulletPosition.position).normalized, Time.deltaTime * 40f); //エイムしてる時、キャラをエイム方向に回転する
+        while (timePassed < 1.5)
+        {
+            timePassed += Time.deltaTime;
+
+            yield return null;
+        }
+        _isShootnRun = false;
+        _thirdPersonMovement.SetRotateOnMove(true);
+
+    }
+    //ーーーーーーーーーーendCoroutine関数ーーーーーーーーーー
 
 
     //ーーーーーーーーーーPublic関数ーーーーーーーーーー
