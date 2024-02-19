@@ -14,7 +14,7 @@ public class ResultSystem : MonoBehaviour
     {
         _text = GetComponent<Text>();
         _result = ScoreSystem.Score;
-        _string = "SCORE: " + _result.ToString("00000000");
+        _string = _result.ToString("00000000");
         _text.text = _string;
     }
 

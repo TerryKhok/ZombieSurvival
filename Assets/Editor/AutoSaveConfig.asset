@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: AutoSaveConfig
   m_EditorClassIdentifier: 
   Enabled: 1
-  Frequency: 5
+  Frequency: 20
   Logging: 1

@@ -1,10 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerStats : CharacterStats
 {
     [SerializeField] HealthBar _healthbar;
+    [SerializeField] Animator _hurtScreen;
 
     [SerializeField] ThirdPersonMovement _playerController;
     [SerializeField] ThirdPersonShooterController _playerShooterController;
@@ -29,11 +31,17 @@ public class PlayerStats : CharacterStats
     {
         base.TakeDamage(damage);
         _healthbar.SetCurrentHealth(currentHealth);
-        if(damage > 0){
-        _animator.SetTrigger(_animIDHurt);
-        _audioManager.Play("PlayerHurt");
-        }else{
-            //heal effectß
+        if (damage > 0)
+        {
+            _animator.SetTrigger(_animIDHurt);
+            _audioManager.Play("PlayerHurt");
+            _hurtScreen.SetTrigger("isHurt");
+        }
+        else
+        {
+            _hurtScreen.SetTrigger("isHealed");
+            _audioManager.Play("PlayerHeal");
+
         }
     }
 
