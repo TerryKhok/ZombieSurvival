@@ -89,7 +89,7 @@ public class ThirdPersonMovement : MonoBehaviour
     private SceneTransition _sceneTransition;
     [SerializeField] private AudioManager _audioManager;
 
-    private const float _threshold = 0.01f;
+    private const float _threshold = 0.00f;
 
     private bool _hasAnimator;
     //ーーーーーーーーーーend変数宣言ーーーーーーーーーー
