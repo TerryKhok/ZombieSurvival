@@ -28,6 +28,11 @@ public class ThirdPersonShooterController : MonoBehaviour
     [SerializeField] private Transform _UIGunObject;
     [SerializeField] private Text _bulletAmountText; //銃の弾数
 
+    [Header("Grenade")]
+    [SerializeField] private GameObject _grenadePrefab;
+    [SerializeField] private float _throwForce = 40f;
+    [SerializeField] private float _grenadeCooldown;
+
     [Header("Gun Stats")]
     [SerializeField] private int _damage;
     [SerializeField] private int _magazineSize;
@@ -54,6 +59,7 @@ public class ThirdPersonShooterController : MonoBehaviour
     private AudioManager _audioManager;
 
     private Vector3 _targetPosition = Vector3.zero; //カーソル位置情報
+    private Vector3 _aimDirection = Vector3.zero;
 
     private float _shootRate;
     private int _bulletsLeft;
@@ -63,6 +69,7 @@ public class ThirdPersonShooterController : MonoBehaviour
     private bool _readyToShoot;
     private bool _isReloading;
     private bool _isShootnRun;
+    private bool _readyToGrenade;
 
     //ーーーーーーーーーーend変数宣言ーーーーーーーーーー
 
@@ -91,6 +98,8 @@ public class ThirdPersonShooterController : MonoBehaviour
 
         _bulletsLeft = _magazineSize;
         _readyToShoot = true;
+        _readyToGrenade = true;
+
     }
 
 
@@ -133,11 +142,11 @@ public class ThirdPersonShooterController : MonoBehaviour
             //カーソル位置情報からキャラの回転方向を決める
             Vector3 worldAimTarget = _targetPosition;
             worldAimTarget.y = _playerGameobject.transform.position.y;
-            Vector3 aimDirection = (worldAimTarget - _playerGameobject.transform.position).normalized;
+            _aimDirection = (worldAimTarget - _playerGameobject.transform.position).normalized;
 
-            _playerGameobject.transform.forward = Vector3.Lerp(_playerGameobject.transform.forward, aimDirection, Time.deltaTime * 20f); //エイムしてる時、キャラをエイム方向に回転する
+            _playerGameobject.transform.forward = Vector3.Lerp(_playerGameobject.transform.forward, _aimDirection, Time.deltaTime * 20f); //エイムしてる時、キャラをエイム方向に回転する
         }
-        else if(!_isShootnRun)
+        else if (!_isShootnRun)
         {
             _aimVirtualCamera.gameObject.SetActive(false);
             _thirdPersonMovement.SetSensitivity(_normalSensitivity);
@@ -238,6 +247,22 @@ public class ThirdPersonShooterController : MonoBehaviour
     {
         StartCoroutine(RotatingToShootDir());
     }
+
+
+    private void ThrowGrenade()
+    {
+        _readyToGrenade = false;
+        GameObject grenade = Instantiate(_grenadePrefab, _spawnBulletPosition.position, transform.rotation);
+        Rigidbody rb = grenade.GetComponent<Rigidbody>();
+        rb.AddForce(_aimDirection * _throwForce, ForceMode.Impulse);
+        Invoke("ResetGrenadeCooldown", _grenadeCooldown);
+    }
+
+
+    private void ResetGrenadeCooldown()
+    {
+        _readyToGrenade = true;
+    }
     //ーーーーーーーーーーendPrivate関数ーーーーーーーーーー
 
 
@@ -247,8 +272,8 @@ public class ThirdPersonShooterController : MonoBehaviour
         _thirdPersonMovement.SetRotateOnMove(false);
         float timePassed = 0;
         _isShootnRun = true;
-                _playerGameobject.transform.forward = Vector3.Lerp(_playerGameobject.transform.forward,
-                    (_targetPosition - _spawnBulletPosition.position).normalized, Time.deltaTime * 40f); //エイムしてる時、キャラをエイム方向に回転する
+        _playerGameobject.transform.forward = Vector3.Lerp(_playerGameobject.transform.forward,
+            (_targetPosition - _spawnBulletPosition.position).normalized, Time.deltaTime * 40f); //エイムしてる時、キャラをエイム方向に回転する
         while (timePassed < 1.5)
         {
             timePassed += Time.deltaTime;
@@ -281,6 +306,10 @@ public class ThirdPersonShooterController : MonoBehaviour
             {
                 _crosshairController.SetReloadSpeed(_reloadSpeed);
                 Reload();
+            }
+            if (Input.GetKeyDown(KeyCode.G) && _readyToGrenade)
+            {
+                ThrowGrenade();
             }
         }
 
