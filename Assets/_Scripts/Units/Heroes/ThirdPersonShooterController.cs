@@ -57,6 +57,7 @@ public class ThirdPersonShooterController : MonoBehaviour
     private StarterAssetsInputs _starterAssetsInputs; //入力情報
     private Animator _animator;
     private AudioManager _audioManager;
+    private GrenadeUI _grenadeUI;
 
     private Vector3 _targetPosition = Vector3.zero; //カーソル位置情報
     private Vector3 _aimDirection = Vector3.zero;
@@ -79,6 +80,7 @@ public class ThirdPersonShooterController : MonoBehaviour
         _thirdPersonMovement = GetComponentInParent<ThirdPersonMovement>(); //移動処理をゲット
         _starterAssetsInputs = GetComponentInParent<StarterAssetsInputs>(); //入力コンポーネントをゲット
         _animator = GetComponentInParent<Animator>(); //アニメーションコンポーネントをゲット
+        _grenadeUI = GetComponentInParent<GrenadeUI>();
         _audioManager = FindObjectOfType<AudioManager>();
     }
 
@@ -255,6 +257,7 @@ public class ThirdPersonShooterController : MonoBehaviour
         GameObject grenade = Instantiate(_grenadePrefab, _spawnBulletPosition.position, transform.rotation);
         Rigidbody rb = grenade.GetComponent<Rigidbody>();
         rb.AddForce(_aimDirection * _throwForce, ForceMode.Impulse);
+        _grenadeUI.StartCooldown(_grenadeCooldown);
         Invoke("ResetGrenadeCooldown", _grenadeCooldown);
     }
 

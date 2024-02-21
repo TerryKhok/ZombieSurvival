@@ -8,11 +8,11 @@ public class LeaderboardSystem : MonoBehaviour
     [SerializeField] private List<Text> names;
     [SerializeField] private List<Text> scores;
 
-    private string publicLeaderboardKey = "d729ab99dc6390022de73053a61bb3bff483937573f7e890fe565c40df5c9da6";
+    private string publicLeaderboardKey = "b3d1a9d94b41d4cac45bfb474857244855a183958c2255ca0f7e0833c81b02fc";
 
     private void Start() {
-        LeaderboardCreator.ResetPlayer();
         GetLeadeboard();
+        LeaderboardCreator.ResetPlayer();
     }
 
     public void GetLeadeboard()

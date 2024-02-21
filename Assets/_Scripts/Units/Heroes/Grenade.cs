@@ -14,6 +14,15 @@ public class Grenade : MonoBehaviour
     private float _countdown;
     private bool _hasExploded = false;
 
+    private AudioManager _audioManager;
+    private GrenadeUI _grenadeUI;
+
+    private void Awake()
+    {
+        _audioManager = FindObjectOfType<AudioManager>();
+        _grenadeUI = GetComponent<GrenadeUI>();
+    }
+
     private void Start()
     {
         _countdown = _delay;
@@ -33,13 +42,15 @@ public class Grenade : MonoBehaviour
     private void Explode()
     {
         Instantiate(_explosionVFX, transform.position, _explosionVFX.transform.rotation);
+        _audioManager.Play("Explosion");
 
-        Collider[] colliders = Physics.OverlapSphere(transform.position, _radius,_layermask);
+        Collider[] colliders = Physics.OverlapSphere(transform.position, _radius, _layermask);
         foreach (Collider col in colliders)
         {
-                if(col.transform.name=="Player"){
-                    col.GetComponent<PlayerStats>().TakeDamage(_damage);
-                }
+            if (col.transform.name == "Player")
+            {
+                col.GetComponent<PlayerStats>().TakeDamage(_damage);
+            }
             Rigidbody rb = col.GetComponent<Rigidbody>();
             if (rb != null)
             {
