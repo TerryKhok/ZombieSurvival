@@ -15,6 +15,7 @@ TagManager:
   - Minigun
   - SpawnManager
   - SupplyManager
+  - Road
   layers:
   - Default
   - TransparentFX

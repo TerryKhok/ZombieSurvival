@@ -272,11 +272,12 @@ public class ThirdPersonShooterController : MonoBehaviour
     //ーーーーーーーーーーCoroutine関数ーーーーーーーーーー
     IEnumerator RotatingToShootDir()
     {
+        Vector3 rotateDir = (_targetPosition - _spawnBulletPosition.position).normalized;
         _thirdPersonMovement.SetRotateOnMove(false);
         float timePassed = 0;
         _isShootnRun = true;
         _playerGameobject.transform.forward = Vector3.Lerp(_playerGameobject.transform.forward,
-            (_targetPosition - _spawnBulletPosition.position).normalized, Time.deltaTime * 40f); //エイムしてる時、キャラをエイム方向に回転する
+                                        new Vector3(rotateDir.x, 0f, rotateDir.z), Time.deltaTime * 40f); //エイムしてる時、キャラをエイム方向に回転する
         while (timePassed < 1.5)
         {
             timePassed += Time.deltaTime;

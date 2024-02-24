@@ -121,8 +121,6 @@ public class ThirdPersonMovement : MonoBehaviour
 
         _fallTimeoutDelta = _fallOffsetTime; //誤差をリセット
         _jumpTimeoutDelta = _jumpCooldown;
-
-        _audioManager.Play("BGM");
     }
 
 
@@ -399,9 +397,6 @@ public class ThirdPersonMovement : MonoBehaviour
     public void PlayDeathVFX()
     {
         Instantiate(_vfxDeath, transform.position, Quaternion.identity);
-    }
-
-    public void PlayExplotionSFX(){
         _audioManager.Play("Explosion");
     }
     //ーーーーーーーーーーendPublic関数ーーーーーーーーーー

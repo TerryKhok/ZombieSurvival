@@ -11,22 +11,6 @@ using UnityEngine.U2D;
 
 public class CompanionController : MonoBehaviour
 {
-
-    // if(idle){
-    //      faceOutward()
-    // }
-    // if(enemyInRange){
-    //     Aim()
-    //     Shoot()
-    //     if(playerFarAway){
-    //         stopShootingAndDashToPlayer()
-    //     }
-    //     else if(playerOutOfRange){
-    //         moveWhileShooting()
-    //     }
-    // }
-
-
     //ーーーーーーーーーー変数宣言ーーーーーーーーーー
     [Header("Follow Configs")]
     [SerializeField] private Transform _followDestination; //移動目的地
@@ -35,14 +19,22 @@ public class CompanionController : MonoBehaviour
     [SerializeField] private float _walkSpeed; //歩く速度
     [SerializeField] private float _runSpeed; //走る速度
 
+    [Header("Ground Check")]
+    [SerializeField] private LayerMask _groundLayer;
+    [SerializeField] private GameObject _dustEffect;
+    [SerializeField] private bool _isBGMPlayer;
+
     [Header("Cache")]
     [SerializeField] private Player _player; //プレイヤーObject情報
 
     //Cache
     private NavMeshAgent _agent;
     private CompanionAttack _companionAttack;
+    private Rigidbody _rigidbody;
+    private AudioManager _audioManager;
 
     private float _distanceBetweenPlayer; //プレイヤーとの距離
+    private bool _isGrounded;
     //ーーーーーーーーーーend変数宣言ーーーーーーーーーー
 
 
@@ -50,11 +42,39 @@ public class CompanionController : MonoBehaviour
     {
         _agent = GetComponent<NavMeshAgent>();
         _companionAttack = GetComponentInChildren<CompanionAttack>();
+        _rigidbody = GetComponent<Rigidbody>();
+        _audioManager = FindObjectOfType<AudioManager>();
+    }
+
+
+    private void Start()
+    {
+        _agent.enabled = false;
+        _isGrounded = false;
     }
 
 
     private void Update()
     {
+        if (!_isGrounded)
+        {
+            Collider[] colInfo = Physics.OverlapSphere(transform.position, .05f, _groundLayer);
+            foreach (Collider col in colInfo)
+            {
+                if (col.CompareTag("Road"))
+                    Debug.Log(col);
+                Instantiate(_dustEffect, transform.position, _dustEffect.transform.rotation);
+                _agent.enabled = true;
+                _isGrounded = true;
+                if (_isBGMPlayer)
+                {
+                    _audioManager.Play("BGM");
+                }
+                Destroy(_rigidbody);
+                return;
+            }
+        }
+
         _distanceBetweenPlayer = Vector3.Distance(_player.transform.position, transform.position); //プレイヤーとの距離を計算
         if (_distanceBetweenPlayer > _runRadius) //走る範囲入ったらプレイヤーの位置まで走る
         {
@@ -66,7 +86,7 @@ public class CompanionController : MonoBehaviour
             WalkAndGunToPlayer();
             _companionAttack.SetIsRunning(false);
         }
-        else if(!_companionAttack.IsShooting!)//Idle状態の時プレイヤーから外に向く
+        else if (!_companionAttack.IsShooting!)//Idle状態の時プレイヤーから外に向く
         {
             IdleAndFaceOutwards();
         }

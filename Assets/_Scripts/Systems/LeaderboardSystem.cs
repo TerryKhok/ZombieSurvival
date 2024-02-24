@@ -10,9 +10,9 @@ public class LeaderboardSystem : MonoBehaviour
 
     private string publicLeaderboardKey = "b3d1a9d94b41d4cac45bfb474857244855a183958c2255ca0f7e0833c81b02fc";
 
-    private void Start() {
+    private void Start()
+    {
         GetLeadeboard();
-        LeaderboardCreator.ResetPlayer();
     }
 
     public void GetLeadeboard()
@@ -33,6 +33,7 @@ public class LeaderboardSystem : MonoBehaviour
         LeaderboardCreator.UploadNewEntry(publicLeaderboardKey, username, score, (_) =>
         {
             GetLeadeboard();
+            //LeaderboardCreator.ResetPlayer();
         });
     }
 }
