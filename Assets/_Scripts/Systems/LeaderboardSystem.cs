@@ -33,7 +33,7 @@ public class LeaderboardSystem : MonoBehaviour
         LeaderboardCreator.UploadNewEntry(publicLeaderboardKey, username, score, (_) =>
         {
             GetLeadeboard();
-            //LeaderboardCreator.ResetPlayer();
+            LeaderboardCreator.ResetPlayer();
         });
     }
 }
