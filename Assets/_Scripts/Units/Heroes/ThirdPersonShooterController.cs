@@ -49,6 +49,7 @@ public class ThirdPersonShooterController : MonoBehaviour
     [Header("SFX")]
     [SerializeField] private string _gunShotSFX;
     [SerializeField] private string _gunCockSFX;
+
     private bool _isPlayingMinigunLoop = false;
 
     public bool IsDead = false;
@@ -58,6 +59,7 @@ public class ThirdPersonShooterController : MonoBehaviour
     private Animator _animator;
     private AudioManager _audioManager;
     private GrenadeUI _grenadeUI;
+    private PauseMenu _pauseMenu;
 
     private Vector3 _targetPosition = Vector3.zero; //カーソル位置情報
     private Vector3 _aimDirection = Vector3.zero;
@@ -72,6 +74,7 @@ public class ThirdPersonShooterController : MonoBehaviour
     private bool _isShootnRun;
     private bool _readyToGrenade;
 
+
     //ーーーーーーーーーーend変数宣言ーーーーーーーーーー
 
 
@@ -82,6 +85,7 @@ public class ThirdPersonShooterController : MonoBehaviour
         _animator = GetComponentInParent<Animator>(); //アニメーションコンポーネントをゲット
         _grenadeUI = GetComponentInParent<GrenadeUI>();
         _audioManager = FindObjectOfType<AudioManager>();
+        _pauseMenu = FindObjectOfType<PauseMenu>();
     }
 
 
@@ -107,7 +111,7 @@ public class ThirdPersonShooterController : MonoBehaviour
 
     private void Update()
     {
-        if (_isControlled)
+        if (_isControlled && !_pauseMenu.IsPaused)
         {
             if (!IsDead)
             {
@@ -227,7 +231,10 @@ public class ThirdPersonShooterController : MonoBehaviour
     {
         _isReloading = true;
 
-        if (_isControlled) { _crosshairController.DoReload(); }
+        if (_isControlled) { 
+            _audioManager.Play("Colt_Reload");
+            _crosshairController.DoReload(); 
+            }
         Invoke("ReloadFinished", _reloadSpeed);
     }
 
@@ -254,6 +261,7 @@ public class ThirdPersonShooterController : MonoBehaviour
     private void ThrowGrenade()
     {
         _readyToGrenade = false;
+        _audioManager.Play("Colt_Grenade");
         GameObject grenade = Instantiate(_grenadePrefab, _spawnBulletPosition.position, transform.rotation);
         Rigidbody rb = grenade.GetComponent<Rigidbody>();
         rb.AddForce(_aimDirection * _throwForce, ForceMode.Impulse);

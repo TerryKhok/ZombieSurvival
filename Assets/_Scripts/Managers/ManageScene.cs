@@ -9,6 +9,8 @@ public class ManageScene : MonoBehaviour
     public void StartGame()
     {
         SceneManager.LoadScene("Main");
+        FindObjectOfType<AudioManager>().Stop("MinigunShot");
+        FindObjectOfType<AudioManager>().Stop("BGM");
     }
 
     public void ExitGame()

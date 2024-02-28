@@ -87,7 +87,8 @@ public class ThirdPersonMovement : MonoBehaviour
     private bool _rotateOnMove = true;
     private ManageScene _manageScene;
     private SceneTransition _sceneTransition;
-    [SerializeField] private AudioManager _audioManager;
+    private AudioManager _audioManager;
+    private PauseMenu _pauseMenu;
 
     private const float _threshold = 0.00f;
 
@@ -112,6 +113,7 @@ public class ThirdPersonMovement : MonoBehaviour
         _playerInput = GetComponent<PlayerInput>();
         _manageScene = GetComponent<ManageScene>();
         _sceneTransition = FindAnyObjectByType<SceneTransition>();
+        _pauseMenu = FindObjectOfType<PauseMenu>();
 
         _audioManager = FindObjectOfType<AudioManager>();
         AssignAnimationIDs();
@@ -127,15 +129,16 @@ public class ThirdPersonMovement : MonoBehaviour
     private void Update()
     {
         _hasAnimator = TryGetComponent(out _animator);
-        if (!IsDead)
+        if (!IsDead && !_pauseMenu.IsPaused)
         {
             JumpAndGravity();
             Movement();
             IsGroundCheck();
         }
-        else
+        else if(IsDead)
         {
             _animator.SetTrigger(_animIDDeath);
+            _audioManager.Play("Colt_Death");
 
             _deathTime -= Time.deltaTime;
             if (_deathTime < 5.0f)
@@ -156,7 +159,10 @@ public class ThirdPersonMovement : MonoBehaviour
 
     private void LateUpdate()
     {
-        CameraRotation();
+        if (!_pauseMenu.IsPaused)
+        {
+            CameraRotation();
+        }
     }
 
 

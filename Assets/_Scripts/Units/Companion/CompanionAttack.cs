@@ -10,13 +10,17 @@ public class CompanionAttack : MonoBehaviour
     [SerializeField] ThirdPersonShooterController _shooterController;
 
     [SerializeField] private List<BulletTarget> _attackableObjects = new List<BulletTarget>(); //範囲内敵のリスト
+    [SerializeField] private float _enemiesVoiceCooldown = 15f;
+
+    private static bool _enemiesVoicePlayable = false;
 
     public bool IsShooting = false;
 
     private Coroutine AttackCoroutine;
-
     private bool _isRunning = false;
     private Vector3 _shootDir;
+
+    private AudioManager _audioManager;
     //ーーーーーーーーーーend変数宣言ーーーーーーーーーー
 
 
@@ -24,6 +28,12 @@ public class CompanionAttack : MonoBehaviour
     {
         _companionGameobject = GetComponentInParent<Companion>().transform;
         _shooterController = GetComponent<ThirdPersonShooterController>();
+        _audioManager = FindObjectOfType<AudioManager>();
+    }
+
+    private void Start()
+    {
+        Invoke("DelayVoice", 10f);
     }
 
     private void FixedUpdate()
@@ -45,6 +55,7 @@ public class CompanionAttack : MonoBehaviour
             {
                 StopCoroutine(AttackCoroutine);
             }
+            PlayEnemiesVoice();
             AttackCoroutine = StartCoroutine(Attack()); //攻撃処理Coroutine
         }
     }
@@ -65,6 +76,27 @@ public class CompanionAttack : MonoBehaviour
     }
 
 
+    private void PlayEnemiesVoice()
+    {
+        if (_enemiesVoicePlayable)
+        {
+            _enemiesVoicePlayable = false;
+            int character = Random.Range(0, 2);
+            switch (character)
+            {
+                case 0:
+                    _audioManager.Play("Catalina_Enemies");
+                    break;
+                case 1:
+                    _audioManager.Play("Stone_Enemies");
+                    break;
+                case 2:
+                    _audioManager.Play("Viktor_Enemies");
+                    break;
+            }
+            StartCoroutine(ResetCooldown());
+        }
+    }
     //ーーーーーーーーーーCoroutine関数ーーーーーーーーーー
     //攻撃Coroutine
     private IEnumerator Attack()
@@ -95,6 +127,13 @@ public class CompanionAttack : MonoBehaviour
             yield return null;
         }
     }
+
+
+    IEnumerator ResetCooldown()
+    {
+        yield return new WaitForSeconds(_enemiesVoiceCooldown);
+        _enemiesVoicePlayable = true;
+    }
     //ーーーーーーーーーーendCoroutine関数ーーーーーーーーーー
 
 
@@ -114,6 +153,12 @@ public class CompanionAttack : MonoBehaviour
             }
         }
         return _attackableObjects[clostestIndex];
+    }
+
+
+    private void DelayVoice()
+    {
+        _enemiesVoicePlayable = true;
     }
     //ーーーーーーーーーーendPrivate関数ーーーーーーーーーー
 

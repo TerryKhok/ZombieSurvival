@@ -1,11 +1,7 @@
 using System.Collections;
-using System.Data.Common;
-using Unity.Mathematics;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.Animations;
-using UnityEngine.U2D;
+
 
 [RequireComponent(typeof(NavMeshAgent))]
 
@@ -16,13 +12,18 @@ public class CompanionController : MonoBehaviour
     [SerializeField] private Transform _followDestination; //移動目的地
     [SerializeField] private float _walkRadius; //歩く範囲
     [SerializeField] private float _runRadius; //走る範囲
+    [SerializeField] private float _dashRadius; //ダッシュ範囲
     [SerializeField] private float _walkSpeed; //歩く速度
     [SerializeField] private float _runSpeed; //走る速度
+    [SerializeField] private float _dashSpeed; //ダッシュ速度
 
     [Header("Ground Check")]
     [SerializeField] private LayerMask _groundLayer;
     [SerializeField] private GameObject _dustEffect;
     [SerializeField] private bool _isBGMPlayer;
+
+    [Header("VoiceControl")]
+    [SerializeField] private float _idleVoiceCooldown = 15f;
 
     [Header("Cache")]
     [SerializeField] private Player _player; //プレイヤーObject情報
@@ -35,6 +36,7 @@ public class CompanionController : MonoBehaviour
 
     private float _distanceBetweenPlayer; //プレイヤーとの距離
     private bool _isGrounded;
+    private static bool _idleVoicePlayable = false;
     //ーーーーーーーーーーend変数宣言ーーーーーーーーーー
 
 
@@ -69,6 +71,8 @@ public class CompanionController : MonoBehaviour
                 if (_isBGMPlayer)
                 {
                     _audioManager.Play("BGM");
+                    Invoke("PlayIntroVoice", 1f);
+                    Invoke("DelayVoice", 10f);
                 }
                 Destroy(_rigidbody);
                 return;
@@ -76,7 +80,12 @@ public class CompanionController : MonoBehaviour
         }
 
         _distanceBetweenPlayer = Vector3.Distance(_player.transform.position, transform.position); //プレイヤーとの距離を計算
-        if (_distanceBetweenPlayer > _runRadius) //走る範囲入ったらプレイヤーの位置まで走る
+        if (_distanceBetweenPlayer > _dashRadius) //ダッシュ範囲入ったらプレイヤーの位置までダッシュ
+        {
+            DashToPlayer();
+            _companionAttack.SetIsRunning(true);
+        }
+        else if (_distanceBetweenPlayer > _runRadius) //走る範囲入ったらプレイヤーの位置まで走る
         {
             RunToPlayer();
             _companionAttack.SetIsRunning(true);
@@ -94,6 +103,13 @@ public class CompanionController : MonoBehaviour
 
 
     //ーーーーーーーーーーPrivate関数ーーーーーーーーーー
+    //プレイやーの位置にダッシュ関数
+    private void DashToPlayer()
+    {
+        FollowPlayer(_followDestination.position, _dashSpeed);
+    }
+
+
     //プレイやーの位置に走る関数
     private void RunToPlayer()
     {
@@ -116,6 +132,7 @@ public class CompanionController : MonoBehaviour
             if (!_agent.hasPath || _agent.velocity.sqrMagnitude == 0f) //新し目的地がない、動いてない
             {
                 //プレイヤーを向いてる時の反対向き
+                PlayIdleVoice();
                 Quaternion outwardDir = Quaternion.LookRotation(_player.transform.position - transform.position) * Quaternion.Euler(0, 180, 0);
                 transform.rotation = Quaternion.Slerp(transform.rotation, outwardDir, 0.005f);
             }
@@ -129,6 +146,49 @@ public class CompanionController : MonoBehaviour
         _agent.SetDestination(followDestination);
         _agent.speed = followSpeed;
     }
+
+
+    private void PlayIntroVoice()
+    {
+        _audioManager.Play("Colt_Intro");
+    }
+
+    private void PlayIdleVoice()
+    {
+        if (_idleVoicePlayable)
+        {
+            _idleVoicePlayable = false;
+            int character = Random.Range(0, 2);
+            switch (character)
+            {
+                case 0:
+                    _audioManager.Play("Catalina_Idle");
+                    break;
+                case 1:
+                    _audioManager.Play("Stone_Idle");
+                    break;
+                case 2:
+                    _audioManager.Play("Viktor_Idle");
+                    break;
+            }
+            StartCoroutine(ResetCooldown());
+        }
+    }
+
+
+    private void DelayVoice()
+    {
+        _idleVoicePlayable = true;
+    }
     //ーーーーーーーーーーendPrivate関数ーーーーーーーーーー
+
+
+    //ーーーーーーーーーーCoroutine関数ーーーーーーーーーー
+    IEnumerator ResetCooldown()
+    {
+        yield return new WaitForSeconds(_idleVoiceCooldown);
+        _idleVoicePlayable = true;
+    }
+    //ーーーーーーーーーーendCoroutine関数ーーーーーーーーーー
 
 }
