@@ -137,8 +137,8 @@ public class ThirdPersonMovement : MonoBehaviour
         }
         else if(IsDead)
         {
-            _animator.SetTrigger(_animIDDeath);
             _audioManager.Play("Colt_Death");
+            _animator.SetTrigger(_animIDDeath);
 
             _deathTime -= Time.deltaTime;
             if (_deathTime < 5.0f)
